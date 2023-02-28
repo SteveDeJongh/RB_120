@@ -239,4 +239,88 @@ p vroom.color
 vroom.spray_paint("Red")
 p vroom.color
 
+#### Class Methods
+
+class GoodDog
+  def self.what_am_i
+    "I'm a GoodDog class!"
+  end
+end
+
+p GoodDog.what_am_i #=> "I'm a GoodDog class!"
+
+### Class variables
+
+class GoodDog
+  @@number_of_dogs = 0 # Class variable
+
+  def initialize # Constructor
+    @@number_of_dogs += 1 # incrementing class variable upon instantiation of an new class object.
+  end
+
+  def self.total_number_of_dogs
+    @@number_of_dogs @ # returning class variable
+  end
+end
+
+puts GoodDog.total_number_of_dogs
+
+dog1 = GoodDog.new
+dog2 = GoodDog.new
+
+puts GoodDog.total_number_of_dogs
+
+## Constants
+
+class GoodDog
+  DOG_YEARS = 7
+
+  attr_accessor :name, :age
+
+  def initialize(n, a)
+    self.name = n
+    self.age  = a * DOG_YEARS
+  end
+end
+
+sparky = GoodDog.new("Sparky", 4)
+puts sparky.age             # => 28
+
+#### More about self
+
+class GoodDog
+  attr_accessor :name, :height, :weight
+
+  def initialize(n, h, w)
+    self.name   = n
+    self.height = h
+    self.weight = w
+  end
+
+  def change_info(n, h, w)
+    self.name   = n
+    self.height = h
+    self.weight = w
+  end
+
+  def info
+    "#{self.name} weighs #{self.weight} and is #{self.height} tall."
+  end
+
+  def what_is_self
+    self
+  end
+
+  puts self # `self` references the class itself
+
+  def self.this_is_a_class_method # class method 
+    puts "Class method!"
+  end
+
+end
+
+sparky = GoodDog.new('Sparky', '12 inches', '10 lbs')
+p sparky.what_is_self # `self` references the calling object `sparky`
+GoodDog.this_is_a_class_method # Calling the class method.
+
 =end
