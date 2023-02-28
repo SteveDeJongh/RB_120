@@ -258,7 +258,7 @@ class GoodDog
     @@number_of_dogs += 1 # incrementing class variable upon instantiation of an new class object.
   end
 
-  def self.total_number_of_dogs
+  def self.total_number_of_dogs # Class method
     @@number_of_dogs @ # returning class variable
   end
 end
@@ -303,7 +303,7 @@ class GoodDog
     self.weight = w
   end
 
-  def info
+  def info # Instance method
     "#{self.name} weighs #{self.weight} and is #{self.height} tall."
   end
 
@@ -323,4 +323,132 @@ sparky = GoodDog.new('Sparky', '12 inches', '10 lbs')
 p sparky.what_is_self # `self` references the calling object `sparky`
 GoodDog.this_is_a_class_method # Calling the class method.
 
+###### Exercises ######
+1) Add a class method to your MyCar class that calculates the gas mileage of any car.
+
+class MyCar
+  attr_accessor :color # Setter and getter methods
+  attr_reader :year # getter method
+  
+  def self.gas_mileage(gallons, miles) # calling self insinuates its a class method.
+    puts "#{miles/gallons} miles per gallon of gas"
+  end
+
+  def initialize(y, c, m)
+    @year = y
+    @color = c
+    @model = m
+    @speed = 0
+  end
+
+  def speed_up(num)
+   @speed += num
+   puts "You sped up to #{@speed} kph"
+  end
+
+  def brake(num)
+    @speed -= num
+    puts "You braked down to #{@speed} kph"
+  end
+
+  def current_speed
+    puts "You are now going #{@speed} kph"
+  end
+
+  def turn_off()
+    @speed = 0
+    puts "You turned off the car, speed is now #{@speed} kph"
+  end
+
+  def spray_paint(col)
+    self.color = col #self.color uses the setter method on :colour from `attr_accessor`. Alternatively, it could just be `@color = col`
+    puts "Your new #{color} paint job looks great!"
+  end
+end
+
+MyCar.gas_mileage(13, 351) #=> "27 miles per gallon of gas"
+
+2) Override the to_s method to create a user friendly print out of your object.
+
+class MyCar
+  attr_accessor :color # Setter and getter methods
+  attr_reader :year # getter method
+  attr_reader :model # getter method
+  
+  def self.gas_mileage(gallons, miles) # calling self insinuates its a class method.
+    puts "#{miles/gallons} miles per gallon of gas"
+  end
+
+  def to_s # Overrides "to_s" on puts ... call.
+    "My car is a #{year}, #{color}, #{model}" # using attr methods to retrieve instance variables.
+  end
+
+  def initialize(y, c, m)
+    @year = y
+    @color = c
+    @model = m
+    @speed = 0
+  end
+
+  def speed_up(num)
+   @speed += num
+   puts "You sped up to #{@speed} kph"
+  end
+
+  def brake(num)
+    @speed -= num
+    puts "You braked down to #{@speed} kph"
+  end
+
+  def current_speed
+    puts "You are now going #{@speed} kph"
+  end
+
+  def turn_off()
+    @speed = 0
+    puts "You turned off the car, speed is now #{@speed} kph"
+  end
+
+  def spray_paint(col)
+    self.color = col #self.color uses the setter method on :colour from `attr_accessor`. Alternatively, it could just be `@color = col`
+    puts "Your new #{color} paint job looks great!"
+  end
+end
+
+Toyota = MyCar.new(2017, "Red", "Tacoma")
+
+puts Toyota # call to instance methof `to_s` => "My car is a 2017, Red, Tacoma"
+
+3) When running the following code:
+class Person
+  attr_reader :name
+  def initialize(name)
+    @name = name
+  end
+end
+
+bob = Person.new("Steve")
+bob.name = "Bob"
+
+We get the folowing error:
+test.rb:9:in `<main>': undefined method `name=' for
+  #<Person:0x007fef41838a28 @name="Steve"> (NoMethodError)
+
+Why do we get this error and how do we fix it?
+
+We get this error due to there not being a setter method for the instance variables `name`.
+We can add, `attr_writter :name`, or change the attr_reader to `attr_accessor`
+
+class Person
+  attr_accessor :name
+  def initialize(name)
+    @name = name
+  end
+end
+
+bob = Person.new("Steve")
+bob.name = "Bob"
+
+
 =end
+
