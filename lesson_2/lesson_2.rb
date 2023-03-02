@@ -1,7 +1,9 @@
 #### RB 120 Lesson 2 #####
 
 =begin
-# Lecture: Classes and Ojects
+##############################################################################
+########################## Lecture: Classes and Ojects #######################
+##############################################################################
 # 1. Given the below usage of the Person class, code the class definition.
 
 class Person
@@ -106,5 +108,99 @@ puts "The person's name is: #{bob}"
 # This is due to string interpolation calling Object#"to_s". To avoid returning the object id, we can use concatenation, or
 # define a "to_s" method in our class.
 
-=end
+##############################################################################
+########################## Lecture: Inheritance ##############################
+##############################################################################
 
+# 1)
+
+class Dog
+  def speak
+    'bark!'
+  end
+
+  def swim
+    'swimming!'
+  end
+end
+
+class Bulldog < Dog
+  def swim
+    "Can't swim!"
+  end
+end
+
+teddy = Dog.new
+puts teddy.speak           # => "bark!"
+puts teddy.swim           # => "swimming!"
+
+karl = Bulldog.new
+puts karl.speak #=> "bark!"
+puts karl.swim #=> "Can't swim!"
+
+# 2)
+
+class Pet
+  def run
+    'running!'
+  end
+
+  def jump
+    'jumping!'
+  end
+end
+
+class Dog < Pet
+  def speak
+    'bark!'
+  end
+
+  def fetch
+    'fetching!'
+  end
+
+  def swim
+    'swimming!'
+  end
+end
+
+class Cat < Pet
+  def speak
+    'meow!'
+  end
+end
+
+class Bulldog < Dog
+  def swim
+    "Can't swim!"
+  end
+end
+
+pete = Pet.new
+kitty = Cat.new
+dave = Dog.new
+bud = Bulldog.new
+
+p pete.run                # => "running!"
+# p pete.speak              # => NoMethodError
+
+p kitty.run               # => "running!"
+p kitty.speak             # => "meow!"
+# p kitty.fetch             # => NoMethodError
+
+p dave.speak              # => "bark!"
+
+p bud.run                 # => "running!"
+p bud.swim                # => "can't swim!"
+
+# 3)
+
+Bulldog (swim) < dog (speak, fetch, swim) < pet (run, jump)
+Cat (speak) < pet(run, jump)
+Dog (speak, fetch, swim < pet (run, jump)
+
+# 4)
+
+Bulldog.ancestors #=> Bulldog, Dog, Pet, Object, Kernel, BasicObject
+
+=end
