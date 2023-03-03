@@ -203,4 +203,35 @@ Dog (speak, fetch, swim < pet (run, jump)
 
 Bulldog.ancestors #=> Bulldog, Dog, Pet, Object, Kernel, BasicObject
 
+##############################################################################
+################### Lecture: Polymorphism and Ecapsulation ###################
+##############################################################################
+
+Polymorphism
+Polymorphism refers to the ability of different object types to respond to the
+same method invocation, often, but not always, in different ways. In other words,
+data of different types can respond to a common interface. It's a crucial concept 
+in OO programming that can lead to more maintainable code.
+
+Encapsulation
+Encapsulation lets us hide the internal representation of an object from the outside 
+and only expose the methods and properties that users of the object need. We can use 
+method access control to expose these properties and methods through the public (or external)
+interface of a class: its public methods.
+
+##############################################################################
+################### Lecture: Collaborator Objects ############################
+##############################################################################
+
+Objects that are stored as state within another object are also called "collaborator objects".
+We call such objects collaborators because they work in conjunction (or in collaboration) with
+the class they are associated with. For instance, bob has a collaborator object stored in the
+@pet variable. When we need that Bulldog object to perform some action (i.e. we want to 
+access some behavior of @pet), then we can go through bob and call the method on the object
+stored in @pet, such as speak or fetch.
+
+##############################################################################
+################### Lecture: Modules #########################################
+##############################################################################
+
 =end
