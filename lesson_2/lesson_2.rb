@@ -234,4 +234,12 @@ stored in @pet, such as speak or fetch.
 ################### Lecture: Modules #########################################
 ##############################################################################
 
+Ruby is a single inheritance language, meaning a class can only sub-class from one super class.
+
+This can sometimes cause limitations when we want a sub class to adopt some but not all of the super classes
+behaviours, and need to share that behavior amongst mutliple sub classes. The solution is to mixin modules
+and include that module in appropriate classes.
+
+We can mixin as many modules as we'd like, but it does affect the method look up path.
+
 =end
