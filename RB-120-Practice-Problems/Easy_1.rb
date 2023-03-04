@@ -172,16 +172,199 @@ puts name #=> "43" # Return of `puts` on global variable `name`
 # of the returns of each method call, with the exception of line 5, where we've overridden to_s with a custom method
 # within the Pet class.
 
-=end
-
 # 3) Fix the program - Books (Part 1)
 
+class Book
+  attr_reader :title, :author # Fix, add getter methods for @title and @author
 
+  def initialize(author, title)
+    @author = author
+    @title = title
+  end
+
+  def to_s
+    %("#{title}", by #{author})
+  end
+end
+
+book = Book.new("Neil Stephenson", "Snow Crash")
+puts %(The author of "#{book.title}" is #{book.author}.)
+puts %(book = #{book}.)
+
+#Expected output:
+# The author of "Snow Crash" is Neil Stephenson.
+# book = "Snow Crash", by Neil Stephenson.
 
 # 4) Fix the program - Books (Part 2)
+
+class Book
+  attr_accessor :author, :title # Need both getter and setter methods for :author and :title, so we use attr_accessor
+
+  def to_s
+    %("#{title}", by #{author})
+  end
+end
+
+book = Book.new
+book.author = "Neil Stephenson"
+book.title = "Snow Crash"
+puts %(The author of "#{book.title}" is #{book.author}.)
+puts %(book = #{book}.)
+
+# Expected output:
+# The author of "Snow Crash" is Neil Stephenson.
+# book = "Snow Crash", by Neil Stephenson.
+
 # 5) Fix the program - Persons
+class Person
+  def initialize(first_name, last_name)
+    @first_name = first_name.capitalize
+    @last_name = last_name.capitalize
+  end
+
+  def first_name=(name) # Add customer setter method to capitalize input.
+    @first_name = name.capitalize
+  end
+
+  def last_name=(name) # Add customer setter method to capitalize input.
+    @last_name = name.capitalize
+  end
+
+  def to_s
+    "#{@first_name} #{@last_name}"
+  end
+end
+
+person = Person.new('john', 'doe')
+puts person
+
+person.first_name = 'jane'
+person.last_name = 'smith'
+puts person
+
+# Expected output:
+# John Doe
+# Jane Smith
+
 # 6) Fix the program - Flight Data
+class Flight
+  attr_accessor :database_handle # Delete this line. Right now we can reassign this instance variable outside of initialization.
+
+  def initialize(flight_number)
+    @database_handle = Database.init
+    @flight_number = flight_number
+  end
+end
+
 # 7) Biggy Code - Car Mileage
+class Car
+  attr_accessor :mileage
+
+  def initialize
+    @mileage = 0
+  end
+
+  def increment_mileage(miles)
+    total = mileage + miles
+    self.mileage = total # `mileage = total` would be creating a new local `mileage` varialbe and no changing the instance variable @mileage
+  end
+
+  def print_mileage
+    puts mileage
+  end
+end
+
+car = Car.new
+car.mileage = 5000
+car.increment_mileage(678)
+car.print_mileage  # should print 5678
+
 # 8) Rectangles and Squares
+
+class Rectangle
+  def initialize(height, width)
+    @height = height
+    @width = width
+  end
+
+  def area
+    @height * @width
+  end
+end
+
+class Square < Rectangle
+  def initialize(m)
+    super(m, m)
+  end
+end
+
+square = Square.new(5)
+puts "area of square = #{square.area}"
+
 # 9) Complete the Program - Cats!
+
+class Pet
+  attr_reader :name, :age, :color
+
+  def initialize(name, age, color)
+    @name = name
+    @age = age
+    @color = color
+  end
+end
+
+class Cat < Pet
+  def to_s
+    "My cat #{name} is #{age} years old and has #{color} fur."
+  end
+end
+
+pudding = Cat.new('Pudding', 7, 'black and white')
+butterscotch = Cat.new('Butterscotch', 10, 'tan and white')
+puts pudding, butterscotch
+
+# Expected output:
+# My cat Pudding is 7 years old and has black and white fur.
+# My cat Butterscotch is 10 years old and has tan and white fur.
+
 # 10) Refacotring Vehicles
+
+class vehicle
+  attr_reader :make, :model
+
+  def initialize(make,model)
+    @make = make
+    @model = model
+  end
+
+  def to_s
+    "#{@make} #{model}"
+  end
+end
+
+class Car < Vehicle
+  def wheels
+    4
+  end
+end
+
+class Motorcycle < Vehicle
+  def wheels
+    2
+  end
+end
+
+class Truck < Vehicle
+  attr_reader :payload
+
+  def initialize(make, model, payload)
+    super(make, model)
+    @payload = payload
+  end
+
+  def wheels
+    6
+  end
+end
+
+=end
