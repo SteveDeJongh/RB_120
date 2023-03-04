@@ -242,4 +242,12 @@ and include that module in appropriate classes.
 
 We can mixin as many modules as we'd like, but it does affect the method look up path.
 
+##############################################################################
+################### Assignment: OO Rock Paper Scissors #######################
+##############################################################################
+
+# OO_RPS.rb
+
+
+
 =end
