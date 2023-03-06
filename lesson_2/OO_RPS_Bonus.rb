@@ -1,11 +1,29 @@
 #### RB 120 OO RPS Bonus Features #####
 
 class Player
-  attr_accessor :move, :name, :score
+  attr_accessor :move, :name, :score, :moves
 
   def initialize
     set_name
     @score = 0
+    @moves = {'rock' => 0,
+              'paper' => 0,
+              'scissors' => 0,
+              'lizard' => 0,
+              'spock' => 0}
+  end
+
+  def display_moves
+    player = name
+    output = "
+    ------ #{player}'s Move History: ------
+    #{player} called rock #{moves['rock']} times.
+    #{player} called paper #{moves['paper']} times.
+    #{player} called scissors #{moves['scissors']} times.
+    #{player} called lizard #{moves['lizard']} times.
+    #{player} called spock #{moves['spock']} times.
+    "
+    puts output
   end
 end
 
@@ -26,6 +44,7 @@ class Human < Player
     loop do
       puts "Please choose rock, paper, scissors, spock or lizard:"
       choice = gets.chomp
+      self.moves[choice] += 1 if self.moves.key?(choice)
       break if Move::VALUES.include? choice
       puts "Sorry, invalid choice."
     end
@@ -177,6 +196,7 @@ class RPSGame
         computer.choose
         display_moves
         display_winner
+        human.display_moves
         keep_score
         display_score
         break if winner?
