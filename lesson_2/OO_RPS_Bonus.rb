@@ -6,14 +6,14 @@ class Player
   def initialize
     set_name
     @score = 0
-    @moves = {'rock' => 0,
+    @moves = {'rock' => 0, # New instance variable for `Player` class to track moves.
               'paper' => 0,
               'scissors' => 0,
               'lizard' => 0,
               'spock' => 0}
   end
 
-  def display_moves
+  def display_move_history # Displaying move history. 
     player = name
     output = "
     ------ #{player}'s Move History: ------
@@ -59,6 +59,7 @@ class Computer < Player
 
   def choose
     self.move = Move.new(Move::VALUES.sample)
+    moves[move.to_s] += 1
   end
 end
 
@@ -175,6 +176,15 @@ class RPSGame
     @computer.score = 0
   end
 
+  def reset_move_history # Clears move history after each game to 3.
+    @human.moves.each do |move, count|
+      @human.moves[move] = 0
+    end
+    @computer.moves.each do |move, count|
+      @computer.moves[move] = 0
+    end
+  end
+
   def play_again?
     answer = nil
     loop do
@@ -196,12 +206,14 @@ class RPSGame
         computer.choose
         display_moves
         display_winner
-        human.display_moves
+        human.display_move_history
+        computer.display_move_history
         keep_score
         display_score
         break if winner?
       end
       reset_scores
+      reset_move_history
       break unless play_again?
     end
     display_goodbye_message
