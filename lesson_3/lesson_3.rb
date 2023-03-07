@@ -150,3 +150,164 @@
 
 # puts Person.greetings # => Beep, Boop
 # puts Person.new.greet # => Beep or Boop
+
+########################################################################
+############### Inheritance and Variable Scope #########################
+########################################################################
+
+# # Instance variables:
+
+# class Animal
+#   def initialize(name)
+#     @name = name
+#   end
+# end
+
+# class Dog < Animal
+#   def dog_name
+#     "bark! bark! #{@name} bark! bark!"    # can @name be referenced here?
+#   end
+# end
+
+# teddy = Dog.new("Teddy")
+# puts teddy.dog_name                       # => bark! bark! Teddy bark! bark!
+
+# #Works at Dog is a subclass of Animal, and @name is initialize in the superclass `initialize` method.
+
+# class Animal
+#   def initialize(name)
+#     @name = name
+#   end
+# end
+
+# class Dog < Animal
+#   def initialize(name); end
+
+#   def dog_name
+#     "bark! bark! #{@name} bark! bark!"    # can @name be referenced here?
+#   end
+# end
+
+# teddy = Dog.new("Teddy")
+# puts teddy.dog_name                       # => bark! bark!  bark! bark!
+
+# # @name is nil, as @name is not initialized in the `dog` intialize method.
+
+# # Mixin modules.
+
+# module Swim
+#   def enable_swimming
+#     @can_swim = true
+#   end
+# end
+
+# class Dog
+#   include Swim
+
+#   def swim
+#     "swimming!" if @can_swim
+#   end
+# end
+
+# teddy = Dog.new
+# teddy.swim                                  # => nil
+
+# # @can_swim is `nil` as `enable_swimming` was never called.
+
+# teddy = Dog.new
+# teddy.enable_swimming
+# teddy.swim                                  # => swimming!
+
+# # Assuming the same module and class from above, @can_swim is now initialized and availalbe after the enable_swimming
+# # call.
+
+# # Class variable:
+
+# class Animal
+#   @@total_animals = 0
+
+#   def initialize
+#     @@total_animals += 1
+#   end
+# end
+
+# class Dog < Animal
+#   def total_animals
+#     @@total_animals
+#   end
+# end
+
+# spike = Dog.new
+# spike.total_animals                           # => 1
+
+# # Class variables are available in sub-classes. As the class varialbe is intialized in the `Animal` class, there
+# # is no method to explicitly invoke to initialize it. The class variable is loaded when the class is evaluated by
+# # ruby.
+
+# class Vehicle
+#   @@wheels = 4
+
+#   def self.wheels
+#     @@wheels
+#   end
+# end
+
+# Vehicle.wheels                              # => 4
+
+# # intiailized a class with @@wheels and 4
+
+# class Motorcycle < Vehicle
+#   @@wheels = 2
+# end
+
+# Motorcycle.wheels                           # => 2
+# Vehicle.wheels                              # => 2  Yikes!
+
+# # subclass vehicle by Motorcycle. The reassignment of @@hweels will affect the supper class, and all other
+# # subclasses of vehicle.
+
+# # Constants
+
+# module FourWheeler
+#   WHEELS = 4
+# end
+
+# class Vehicle
+#   # include FourWheeler # Needed for "puts car.maintenance" to have access to WHEELS
+#   def maintenance
+#     "Changing #{WHEELS} tires."
+#   end
+# end
+
+# class Car < Vehicle
+#   include FourWheeler
+
+#   def wheels
+#     WHEELS
+#   end
+# end
+
+# car = Car.new
+# puts car.wheels        # => 4
+# puts car.maintenance   # => NameError: uninitialized constant Vehicle::WHEELS
+
+# # NameError is due to the lexical scope of the reference
+# # Loop up path for #Car.maintenance constant WHEELS is vehicle < object ...
+# # Loop up path for #Car.wheels constnat WHEELS is car < FourWheeler < Vehicle ...
+
+# class Vehicle
+#   WHEELS = 4
+# end
+
+# WHEELS = 6
+
+# class Car < Vehicle
+#   def wheels
+#     WHEELS
+#   end
+# end
+
+# car = Car.new
+# puts car.wheels        # => 4
+
+# # Lexical scope does not include the main scope.
