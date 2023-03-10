@@ -1,6 +1,8 @@
-# RB 120 Object Oriented Programming: Lesson 5: OO Tic Tac Toe Bonus #
-
+# RB 120 Object Oriented Programming: Lesson 5: OO Tic Tac Toe Bonus Features #
+require 'pry'
 class Board
+  attr_reader :squares
+
   WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
                   [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # cols
                   [[1, 5, 9], [3, 5, 7]]              # diagonals
@@ -12,6 +14,18 @@ class Board
 
   def unmarked_keys
     @squares.keys.select { |key| @squares[key].unmarked? }
+  end
+
+  def unmarked_keys_string
+    arr = unmarked_keys
+    case arr.size
+    when 0 then ''
+    when 1 then arr.first.to_s
+    when 2 then arr.join(" or ")
+    else
+      arr[-1] = "or #{arr.last}"
+      arr.join(', ')
+    end
   end
 
   def full?
@@ -57,6 +71,10 @@ class Board
 
   def []=(num, marker)
     @squares[num].marker = marker
+  end
+
+  def [](idx)
+    @squares[idx].marker
   end
 
   private
@@ -106,13 +124,15 @@ class TTTGame
   HUMAN_MARKER = "X"
   COMPUTER_MARKER = "O"
   FIRST_TO_MOVE = HUMAN_MARKER
-  attr_reader :board, :human, :computer
+  attr_reader :board, :human, :computer, :human_score, :computer_score
 
   def initialize
     @board = Board.new
     @human = Player.new(HUMAN_MARKER)
     @computer = Player.new(COMPUTER_MARKER)
     @current_marker = FIRST_TO_MOVE
+    @human_score = 0
+    @computer_score = 0
   end
 
   def play # Game Loop
@@ -126,12 +146,21 @@ class TTTGame
 
   def main_game
     loop do # Play again loop
-      display_board
-      player_move # Game Turns
-      display_result
+      best_of_3
       break unless play_again?
       reset
       display_play_again_message
+    end
+  end
+
+  def best_of_3
+    loop do
+      display_board
+      player_move # Game Turns
+      keep_score
+      display_result
+      board.reset
+      break if human_score == 3 || computer_score == 3
     end
   end
 
@@ -154,6 +183,7 @@ class TTTGame
 
   def display_board
     puts "You are #{HUMAN_MARKER}, computer is a #{COMPUTER_MARKER}."
+    display_game_score
     puts ""
     board.draw
     puts ""
@@ -165,7 +195,7 @@ class TTTGame
   end
 
   def human_moves
-    puts "Chooce a square (#{board.unmarked_keys.join(', ')}): "
+    puts "Chooce a square (#{board.unmarked_keys_string}): "
     square = nil
     loop do
       square = gets.chomp.to_i
@@ -176,8 +206,34 @@ class TTTGame
     board[square] = human.marker
   end
 
-  def computer_moves
-    board[board.unmarked_keys.sample] = computer.marker
+  def computer_moves # Attacks first, defence, middle, then randomn.
+    mark = find_winning_play
+    mark = find_at_risk_square unless !mark.nil?
+    mark = 5 unless board[5] != Square::INITIAL_MARKER || !mark.nil?
+    mark = board.unmarked_keys.sample unless !mark.nil?
+    board[mark] = COMPUTER_MARKER
+  end
+
+  def find_at_risk_square # Computer defence.
+    move = nil
+    Board::WINNING_LINES.each do |line|
+      if board.squares.values_at(*line).count { |x| x.to_s == HUMAN_MARKER } == 2
+        move = board.squares.select { |k, v| line.include?(k) && v.to_s == Square::INITIAL_MARKER }.keys.first
+        break if !mark.nil?
+      end
+    end
+    move
+  end
+
+  def find_winning_play # Computer offence.
+    move = nil
+    Board::WINNING_LINES.each do |line|
+      if board.squares.values_at(*line).count { |x| x.to_s == COMPUTER_MARKER } == 2
+        move = board.squares.select { |k, v| line.include?(k) && v.to_s == Square::INITIAL_MARKER }.keys.first
+        break if !move.nil?
+      end
+    end
+    move
   end
 
   def display_result
@@ -189,6 +245,20 @@ class TTTGame
       puts "Computer won!"
     else
       puts "The board is full!"
+    end
+    display_game_score
+  end
+
+  def display_game_score
+    puts "Human: #{human_score}, Computer: #{computer_score}, first to 3!"
+  end
+
+  def keep_score
+    case board.winning_marker
+    when HUMAN_MARKER
+      @human_score += 1
+    when COMPUTER_MARKER
+      @computer_score += 1
     end
   end
 
