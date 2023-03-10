@@ -11,14 +11,6 @@ class Board
     reset
   end
 
-  def get_square_at(key)
-    @squares[key]
-  end
-
-  def set_square_at(key, marker)
-    @squares[key].marker = marker
-  end
-
   def unmarked_keys
     @squares.keys.select{|key| @squares[key].unmarked?}
   end
@@ -30,26 +22,26 @@ class Board
   def someone_one?
     !!winning_marker # relies on truhiness of return value from winning_marker
   end
-  
-  def count_human_marker(squares)
-    squares.collect(&:marker).count(TTTGame::HUMAN_MARKER)
-  end
-
-  def count_computer_marker(squares)
-    squares.collect(&:marker).count(TTTGame::COMPUTER_MARKER)
-  end
 
   # return winning marker or nil
   def winning_marker
     WINNING_LINES.each do |line|
-      if count_human_marker(@squares.values_at(*line)) == 3
-        return TTTGame::HUMAN_MARKER
-      elsif count_computer_marker(@squares.select{|k,_| line.include?(k)}.values) == 3
-        return TTTGame::COMPUTER_MARKER
+      squares = @squares.values_at(*line)
+      if three_identical_markers?(squares)
+        return squares.first.marker
       end
     end
     nil
   end
+  
+  #     if count_human_marker(@squares.values_at(*line)) == 3
+  #       return TTTGame::HUMAN_MARKER
+  #     elsif count_computer_marker(@squares.select{|k,_| line.include?(k)}.values) == 3
+  #       return TTTGame::COMPUTER_MARKER
+  #     end
+  #   end
+  #   nil
+  # end
 
   def reset
     (1..9).each { |x| @squares[x] = Square.new }
@@ -57,16 +49,28 @@ class Board
 
   def draw
     puts "     |     |  "  
-    puts "  #{get_square_at(1)}  |  #{get_square_at(2)}  |  #{get_square_at(3)}"
+    puts "  #{@squares[1]}  |  #{@squares[2]}  |  #{@squares[3]}"
     puts "     |     |  "
     puts "-----|-----|-----"    
     puts "     |     |  "
-    puts "  #{get_square_at(4)}  |  #{get_square_at(5)}  |  #{get_square_at(6)}"
+    puts "  #{@squares[4]}  |  #{@squares[5]}  |  #{@squares[6]}"
     puts "     |     |  "
     puts "-----|-----|-----"
     puts "     |     |  "
-    puts "  #{get_square_at(7)}  |  #{get_square_at(8)}  |  #{get_square_at(9)}"
+    puts "  #{@squares[7]}  |  #{@squares[8]}  |  #{@squares[9]}"
     puts "     |     |  "
+  end
+
+  def []=(num, marker)
+    @squares[num].marker = marker
+  end
+
+  private
+
+  def three_identical_markers?(squares)
+    markers = squares.select(&:marked?).collect(&:marker)
+    return false if markers.size != 3
+    markers.min == markers.max # This is just checking if all markers are the same. Could also do markers.uniq.size == 1, or ...
   end
 end
 
@@ -86,6 +90,10 @@ class Square
   def unmarked?
     marker == INITIAL_MARKER
   end
+
+  def marked?
+    marker != INITIAL_MARKER
+  end
 end
 
 class Player
@@ -101,13 +109,38 @@ end
 class TTTGame
   HUMAN_MARKER = "X"
   COMPUTER_MARKER = "O"
+  FIRST_TO_MOVE = HUMAN_MARKER
   attr_reader :board, :human, :computer
 
   def initialize
     @board = Board.new
     @human = Player.new(HUMAN_MARKER)
     @computer = Player.new(COMPUTER_MARKER)
+    @current_marker = FIRST_TO_MOVE
   end
+
+  def play # Main Game Loop
+    clear
+    display_welcome_message
+
+    loop do #Play again loop
+      display_board
+
+      loop do # Game Turns
+        current_player_moves
+        break if board.someone_one? || board.full?
+        clear_screen_and_display_board if human_turn?
+      end
+      display_result
+      break unless play_again?
+      reset
+      display_play_again_message
+    end
+
+    display_goodbye_message
+  end
+
+  private
 
   def display_welcome_message
     puts "Wecome to Tic Tac Toe!"
@@ -117,25 +150,6 @@ class TTTGame
   def display_goodbye_message
     puts "Thanks for playing Tic Tac Toe! Goodbye!"
   end
-
-  # Split into two seperate method below to avoid having to call the method with the optional argument.
-  # def display_board(clear_screen: true)
-  #   clear if clear_screen
-  #   puts "You are #{HUMAN_MARKER}, computer is a #{COMPUTER_MARKER}."
-  #   puts ""
-  #   puts "     |     |  "  
-  #   puts "  #{board.get_square_at(1)}  |  #{board.get_square_at(2)}  |  #{board.get_square_at(3)}"
-  #   puts "     |     |  "
-  #   puts "-----|-----|-----"    
-  #   puts "     |     |  "
-  #   puts "  #{board.get_square_at(4)}  |  #{board.get_square_at(5)}  |  #{board.get_square_at(6)}"
-  #   puts "     |     |  "
-  #   puts "-----|-----|-----"
-  #   puts "     |     |  "
-  #   puts "  #{board.get_square_at(7)}  |  #{board.get_square_at(8)}  |  #{board.get_square_at(9)}"
-  #   puts "     |     |  "
-  #   puts "" 
-  # end
 
   def display_board
     puts "You are #{HUMAN_MARKER}, computer is a #{COMPUTER_MARKER}."
@@ -157,11 +171,12 @@ class TTTGame
       break if board.unmarked_keys.include?(square)
       puts "Sorry, that's not a valid choice."
     end
-    board.set_square_at(square, human.marker)
+    # board.set_square_at(square, human.marker)
+    board[square] = human.marker
   end
 
   def computer_moves
-    board.set_square_at(board.unmarked_keys.sample, computer.marker)
+    board[board.unmarked_keys.sample] = computer.marker
   end
 
   def display_result
@@ -194,6 +209,7 @@ class TTTGame
 
   def reset
     board.reset
+    @current_marker = FIRST_TO_MOVE
     clear
   end
 
@@ -202,28 +218,20 @@ class TTTGame
     puts ""
   end
 
-  def play
-    clear
-    display_welcome_message
-
-    loop do #Play again loop
-      display_board
-
-      loop do # Game Turns
-        human_moves
-        break if board.someone_one? || board.full?
-        computer_moves
-        break if board.someone_one? || board.full?
-        clear_screen_and_display_board
-      end
-      display_result
-      break unless play_again?
-      reset
-      display_play_again_message
+  def current_player_moves
+    if human_turn?
+      human_moves
+      @current_marker = COMPUTER_MARKER
+    else
+      computer_moves
+      @current_marker = HUMAN_MARKER
     end
-
-    display_goodbye_message
   end
+
+  def human_turn?
+    @current_marker == HUMAN_MARKER
+  end
+
 end
 
 # Kick off the game like so:
