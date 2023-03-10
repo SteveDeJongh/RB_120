@@ -121,16 +121,17 @@ end
 # Orchestration engine
 
 class TTTGame
-  HUMAN_MARKER = "X"
+  # HUMAN_MARKER = player_marker?
   COMPUTER_MARKER = "O"
-  FIRST_TO_MOVE = HUMAN_MARKER
+  # FIRST_TO_MOVE = HUMAN_MARKER
   attr_reader :board, :human, :computer, :human_score, :computer_score
 
   def initialize
     @board = Board.new
-    @human = Player.new(HUMAN_MARKER)
+    @human = Player.new(player_marker?)
     @computer = Player.new(COMPUTER_MARKER)
-    @current_marker = FIRST_TO_MOVE
+    @first_to_move = human.marker
+    @current_marker = nil
     @human_score = 0
     @computer_score = 0
   end
@@ -138,11 +139,17 @@ class TTTGame
   def play # Game Loop
     clear
     display_welcome_message
+    first_move?
     main_game # round loop.
     display_goodbye_message
   end
 
   private
+
+  def player_marker?
+    puts "What marker do you want to use?"
+    gets.chomp
+  end
 
   def main_game
     loop do # Play again loop
@@ -159,6 +166,7 @@ class TTTGame
       player_move # Game Turns
       keep_score
       display_result
+      @current_marker = @first_to_move
       board.reset
       break if human_score == 3 || computer_score == 3
     end
@@ -182,7 +190,7 @@ class TTTGame
   end
 
   def display_board
-    puts "You are #{HUMAN_MARKER}, computer is a #{COMPUTER_MARKER}."
+    puts "You are #{human.marker}, computer is a #{COMPUTER_MARKER}."
     display_game_score
     puts ""
     board.draw
@@ -217,9 +225,9 @@ class TTTGame
   def find_at_risk_square # Computer defence.
     move = nil
     Board::WINNING_LINES.each do |line|
-      if board.squares.values_at(*line).count { |x| x.to_s == HUMAN_MARKER } == 2
+      if board.squares.values_at(*line).count { |x| x.to_s == human.marker } == 2
         move = board.squares.select { |k, v| line.include?(k) && v.to_s == Square::INITIAL_MARKER }.keys.first
-        break if !mark.nil?
+        break if !move.nil?
       end
     end
     move
@@ -239,7 +247,7 @@ class TTTGame
   def display_result
     display_board
     case board.winning_marker
-    when HUMAN_MARKER
+    when human.marker
       puts "You won!"
     when COMPUTER_MARKER
       puts "Computer won!"
@@ -255,7 +263,7 @@ class TTTGame
 
   def keep_score
     case board.winning_marker
-    when HUMAN_MARKER
+    when human.marker
       @human_score += 1
     when COMPUTER_MARKER
       @computer_score += 1
@@ -280,8 +288,21 @@ class TTTGame
 
   def reset
     board.reset
-    @current_marker = FIRST_TO_MOVE
     clear
+  end
+
+  def first_move?
+    first = nil
+    loop do
+      puts "Who makes the first move? (me or you)"
+      first = gets.chomp
+      break if %w(me you).include?(first)
+      puts "Invalid choice, please use `me` or `you`"
+    end
+    @first_to_move = COMPUTER_MARKER if first.downcase.start_with?('y')
+    @first_to_move = human.marker if first.downcase.start_with?('m')
+    @current_marker = COMPUTER_MARKER if first.downcase.start_with?('y')
+    @current_marker = human.marker if first.downcase.start_with?('m')
   end
 
   def display_play_again_message
@@ -295,12 +316,12 @@ class TTTGame
       @current_marker = COMPUTER_MARKER
     else
       computer_moves
-      @current_marker = HUMAN_MARKER
+      @current_marker = human.marker
     end
   end
 
   def human_turn?
-    @current_marker == HUMAN_MARKER
+    @current_marker == human.marker
   end
 end
 
