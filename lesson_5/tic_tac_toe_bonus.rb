@@ -1,77 +1,5 @@
-########### RB 120 Object Oriented Programming: Lesson 5: OO Tic Tac Toe #########
+########### RB 120 Object Oriented Programming: Lesson 5: OO Tic Tac Toe Bonus Features #########
 require 'pry'
-=begin
-1. Write a description of the problem and extract the major nouns and verbs.
-
-Nouns and Verbs:
-
-Tic tac toe is a 2-player voard game played ona  2x2 grid. Players take turns marking a square.
-The first player to mark 3 squares in a row wins.
-
-Nouns: Board, player, square, grid
-Verbs: play, mark
-
-Oragnized:
-Board (grid)
-Square
-Player
- -mark
- -play
-
-Spike:
-
-class Board
-  def initialize
-    # we need some way to model a 3x3 grid. Maybe `squares`?
-    # what data structure should we use?
-    # - Array/hash of square objects?
-    # - array/hash of strings or integers?
-  end
-end
-
-class Square
-  def initialize
-    # maybe a "status" to keep track of this square's mark?
-  end
-end
-
-class Player
-  def initialize
-    # maybee a `marker` to keep track of this player's symbol (ie, 'X', or 'O')
-  end
-
-  def mark
-  end
-
-  def play # This should be removed if we have a TTTGame `play`
-  end
-end
-
-# Orchestration engine
-
-class TTTGame
-  def play
-    display_welcome_message
-    loop do
-      display_board
-      first_player_moves
-      break if someone_won? || board_full?
-
-      second_player_moves
-      break if someone_won? || board_full?
-    end
-    display_result
-    display_goodbye_message
-  end
-end
-
-# Kick of the game like so:
-game = TTTGame.new
-game.play
-
-2. Make an initial guess at organizing the verbs into nouns and do a spike to explore the problem with temporary code.
-3. Optional - when you have a better idea of the problem, model your thoughts into CRC cards.
-=end
 
 class Board
   WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
@@ -100,7 +28,7 @@ class Board
   end
 
   def someone_one?
-    !!detect_winner # relies on truhiness of return value from detect_winner
+    !!winning_marker # relies on truhiness of return value from winning_marker
   end
   
   def count_human_marker(squares)
@@ -112,7 +40,7 @@ class Board
   end
 
   # return winning marker or nil
-  def detect_winner
+  def winning_marker
     WINNING_LINES.each do |line|
       if count_human_marker(@squares.values_at(*line)) == 3
         return TTTGame::HUMAN_MARKER
@@ -120,21 +48,25 @@ class Board
         return TTTGame::COMPUTER_MARKER
       end
     end
-
-      # Refactored into above.
-      # if @squares[line[0]].marker == TTTGame::HUMAN_MARKER && @squares[line[1]].marker == TTTGame::HUMAN_MARKER &&
-      #   @squares[line[2]].marker == TTTGame::HUMAN_MARKER
-      #   return TTTGame::HUMAN_MARKER
-      # elsif @squares[line[0]].marker == TTTGame::COMPUTER_MARKER && @squares[line[1]].marker == TTTGame::COMPUTER_MARKER &&
-      #   @squares[line[2]].marker == TTTGame::COMPUTER_MARKER
-      #   return TTTGame::COMPUTER_MARKER
-      # end
-    # end
     nil
   end
 
   def reset
     (1..9).each { |x| @squares[x] = Square.new }
+  end
+
+  def draw
+    puts "     |     |  "  
+    puts "  #{get_square_at(1)}  |  #{get_square_at(2)}  |  #{get_square_at(3)}"
+    puts "     |     |  "
+    puts "-----|-----|-----"    
+    puts "     |     |  "
+    puts "  #{get_square_at(4)}  |  #{get_square_at(5)}  |  #{get_square_at(6)}"
+    puts "     |     |  "
+    puts "-----|-----|-----"
+    puts "     |     |  "
+    puts "  #{get_square_at(7)}  |  #{get_square_at(8)}  |  #{get_square_at(9)}"
+    puts "     |     |  "
   end
 end
 
@@ -186,22 +118,35 @@ class TTTGame
     puts "Thanks for playing Tic Tac Toe! Goodbye!"
   end
 
-  def display_board(clear = true)
-    system('clear') if clear
+  # Split into two seperate method below to avoid having to call the method with the optional argument.
+  # def display_board(clear_screen: true)
+  #   clear if clear_screen
+  #   puts "You are #{HUMAN_MARKER}, computer is a #{COMPUTER_MARKER}."
+  #   puts ""
+  #   puts "     |     |  "  
+  #   puts "  #{board.get_square_at(1)}  |  #{board.get_square_at(2)}  |  #{board.get_square_at(3)}"
+  #   puts "     |     |  "
+  #   puts "-----|-----|-----"    
+  #   puts "     |     |  "
+  #   puts "  #{board.get_square_at(4)}  |  #{board.get_square_at(5)}  |  #{board.get_square_at(6)}"
+  #   puts "     |     |  "
+  #   puts "-----|-----|-----"
+  #   puts "     |     |  "
+  #   puts "  #{board.get_square_at(7)}  |  #{board.get_square_at(8)}  |  #{board.get_square_at(9)}"
+  #   puts "     |     |  "
+  #   puts "" 
+  # end
+
+  def display_board
     puts "You are #{HUMAN_MARKER}, computer is a #{COMPUTER_MARKER}."
     puts ""
-    puts "     |     |  "  
-    puts "  #{board.get_square_at(1)}  |  #{board.get_square_at(2)}  |  #{board.get_square_at(3)}"
-    puts "     |     |  "
-    puts "-----|-----|-----"    
-    puts "     |     |  "
-    puts "  #{board.get_square_at(4)}  |  #{board.get_square_at(5)}  |  #{board.get_square_at(6)}"
-    puts "     |     |  "
-    puts "-----|-----|-----"
-    puts "     |     |  "
-    puts "  #{board.get_square_at(7)}  |  #{board.get_square_at(8)}  |  #{board.get_square_at(9)}"
-    puts "     |     |  "
+    board.draw
     puts "" 
+  end
+
+  def clear_screen_and_display_board
+    clear
+    display_board
   end
 
   def human_moves
@@ -221,7 +166,7 @@ class TTTGame
 
   def display_result
     display_board
-    case board.detect_winner
+    case board.winning_marker
     when HUMAN_MARKER
       puts "You won!"
     when COMPUTER_MARKER
@@ -243,25 +188,38 @@ class TTTGame
     answer == 'y' # Returns true if answer is "y"
   end
 
-  def play
+  def clear
     system 'clear'
+  end
+
+  def reset
+    board.reset
+    clear
+  end
+
+  def display_play_again_message
+    puts "Let's play again!"
+    puts ""
+  end
+
+  def play
+    clear
     display_welcome_message
 
     loop do #Play again loop
-      display_board(false)
+      display_board
 
       loop do # Game Turns
         human_moves
         break if board.someone_one? || board.full?
         computer_moves
         break if board.someone_one? || board.full?
-        display_board
+        clear_screen_and_display_board
       end
       display_result
       break unless play_again?
-      board.reset
-      system 'clear'
-      puts "Let's play again!"
+      reset
+      display_play_again_message
     end
 
     display_goodbye_message
