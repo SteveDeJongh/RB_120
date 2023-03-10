@@ -1,5 +1,4 @@
-########### RB 120 Object Oriented Programming: Lesson 5: OO Tic Tac Toe Bonus Features #########
-require 'pry'
+# RB 120 Object Oriented Programming: Lesson 5: OO Tic Tac Toe Bonus Features #
 
 class Board
   WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
@@ -12,7 +11,7 @@ class Board
   end
 
   def unmarked_keys
-    @squares.keys.select{|key| @squares[key].unmarked?}
+    @squares.keys.select { |key| @squares[key].unmarked? }
   end
 
   def full?
@@ -33,25 +32,18 @@ class Board
     end
     nil
   end
-  
-  #     if count_human_marker(@squares.values_at(*line)) == 3
-  #       return TTTGame::HUMAN_MARKER
-  #     elsif count_computer_marker(@squares.select{|k,_| line.include?(k)}.values) == 3
-  #       return TTTGame::COMPUTER_MARKER
-  #     end
-  #   end
-  #   nil
-  # end
 
   def reset
     (1..9).each { |x| @squares[x] = Square.new }
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def draw
-    puts "     |     |  "  
+    puts "     |     |  "
     puts "  #{@squares[1]}  |  #{@squares[2]}  |  #{@squares[3]}"
     puts "     |     |  "
-    puts "-----|-----|-----"    
+    puts "-----|-----|-----"
     puts "     |     |  "
     puts "  #{@squares[4]}  |  #{@squares[5]}  |  #{@squares[6]}"
     puts "     |     |  "
@@ -60,6 +52,8 @@ class Board
     puts "  #{@squares[7]}  |  #{@squares[8]}  |  #{@squares[9]}"
     puts "     |     |  "
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def []=(num, marker)
     @squares[num].marker = marker
@@ -70,7 +64,9 @@ class Board
   def three_identical_markers?(squares)
     markers = squares.select(&:marked?).collect(&:marker)
     return false if markers.size != 3
-    markers.min == markers.max # This is just checking if all markers are the same. Could also do markers.uniq.size == 1, or ...
+    markers.min == markers.max
+    # This is just checking if all markers are the same. Could also
+    # do markers.uniq.size == 1, or ...
   end
 end
 
@@ -119,28 +115,33 @@ class TTTGame
     @current_marker = FIRST_TO_MOVE
   end
 
-  def play # Main Game Loop
+  def play # Game Loop
     clear
     display_welcome_message
+    main_game # round loop.
+    display_goodbye_message
+  end
 
-    loop do #Play again loop
+  private
+
+  def main_game
+    loop do # Play again loop
       display_board
-
-      loop do # Game Turns
-        current_player_moves
-        break if board.someone_one? || board.full?
-        clear_screen_and_display_board if human_turn?
-      end
+      player_move # Game Turns
       display_result
       break unless play_again?
       reset
       display_play_again_message
     end
-
-    display_goodbye_message
   end
 
-  private
+  def player_move
+    loop do # Game Turns
+      current_player_moves
+      break if board.someone_one? || board.full?
+      clear_screen_and_display_board if human_turn?
+    end
+  end
 
   def display_welcome_message
     puts "Wecome to Tic Tac Toe!"
@@ -155,7 +156,7 @@ class TTTGame
     puts "You are #{HUMAN_MARKER}, computer is a #{COMPUTER_MARKER}."
     puts ""
     board.draw
-    puts "" 
+    puts ""
   end
 
   def clear_screen_and_display_board
@@ -231,7 +232,6 @@ class TTTGame
   def human_turn?
     @current_marker == HUMAN_MARKER
   end
-
 end
 
 # Kick off the game like so:
