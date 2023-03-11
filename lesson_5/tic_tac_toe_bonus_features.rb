@@ -111,10 +111,11 @@ class Square
 end
 
 class Player
-  attr_reader :marker
+  attr_accessor :marker, :name
 
-  def initialize(marker)
+  def initialize(marker = "X")
     @marker = marker
+    @name = nil
   end
 end
 
@@ -128,7 +129,7 @@ class TTTGame
 
   def initialize
     @board = Board.new
-    @human = Player.new(player_marker?)
+    @human = Player.new()
     @computer = Player.new(COMPUTER_MARKER)
     @first_to_move = human.marker
     @current_marker = nil
@@ -139,16 +140,32 @@ class TTTGame
   def play # Game Loop
     clear
     display_welcome_message
-    first_move?
+    setup
     main_game # round loop.
     display_goodbye_message
   end
 
   private
 
+  def setup
+    first_move?
+    player_marker?
+    player_name?
+    computer_name?
+  end
+
   def player_marker?
     puts "What marker do you want to use?"
-    gets.chomp
+    human.marker = gets.chomp
+  end
+
+  def player_name?
+    puts "What is your name?"
+    human.name = gets.chomp
+  end
+
+  def computer_name?
+    computer.name = ['Bob', 'R2D2', 'Ronick'].sample
   end
 
   def main_game
@@ -190,7 +207,7 @@ class TTTGame
   end
 
   def display_board
-    puts "You are #{human.marker}, computer is a #{COMPUTER_MARKER}."
+    puts "#{human.name} is #{human.marker}, #{computer.name} is a #{COMPUTER_MARKER}."
     display_game_score
     puts ""
     board.draw
@@ -258,7 +275,7 @@ class TTTGame
   end
 
   def display_game_score
-    puts "Human: #{human_score}, Computer: #{computer_score}, first to 3!"
+    puts "#{human.name}: #{human_score}, #{computer.name}: #{computer_score}, first to 3!"
   end
 
   def keep_score
