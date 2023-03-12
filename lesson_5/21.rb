@@ -56,12 +56,21 @@ class Participant
 
     sum = 0
     values.each do |val|
-      case val
-      when "A"             then sum += 11
-      when value.to_i == 0 then sum += 10
+      case
+      when val == "A"      then sum += 11
+      when val.to_i == 0   then sum += 10
       else                      sum += val.to_i
       end
     end
+
+    values.select { |value| value == "A" }.count.times do
+      sum -= 10 if sum > 21
+    end
+    sum
+  end
+
+  def busted?
+    total > 21
   end
 end
 
@@ -76,9 +85,6 @@ class Player < Participant
   end
 
   def stay
-  end
-
-  def busted?
   end
 end
 
@@ -97,9 +103,6 @@ class Dealer < Participant
   end
   
   def stay
-  end
-
-  def busted?
   end
 end
 
@@ -128,7 +131,7 @@ class Deck
 end
 
 class Card
-  attr_reader :val
+  attr_reader :val, :suit
 
   CARD_SUITS = ['H', 'D', 'C', 'S']
   CARD_VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
@@ -146,14 +149,12 @@ class Game
   def start
     # what's the sequence of steps to execute the game play?
     display_welcome_message
-    # binding.pry
-    deal_cards    
+    deal_cards
+    show_initial_cards
+    player_turn
+    dealer_turn
     binding.pry
-
-    # show_initial_cards
-    # player_turn
-    # dealer_turn
-    # show_result
+    show_result
   end
 
   def initialize
@@ -175,7 +176,95 @@ class Game
   end
 
   def show_initial_cards
+    player_display = build_hand(@human)
+    dealer_display = build_hand(@dealer)
+    dealer_display[0] = ['Hidden']
+    puts "Player cards: #{player_display.join(',')}, for a total of #{@human.total}."
+    puts "Dealer cards: #{dealer_display.join(',')}."
+  end
 
+  def show_cards
+    player_display = build_hand(@human)
+    dealer_display = build_hand(@dealer)
+    puts "Player cards: #{player_display.join(',')}, for a total of #{@human.total}."
+    puts "Dealer cards: #{dealer_display.join(',')}, for a total of #{@dealer.total}."
+  end
+
+  def build_hand(player)
+    hand = []
+    player.cards.each do |card|
+      hand<< [card.suit + card.val]
+    end
+    hand
+  end
+
+  def player_turn
+    loop do
+      answer = nil
+      loop do
+        puts "Would you like to hit or stay?"
+        answer = gets.chomp.downcase
+        break if ['h', 's'].include?(answer)
+        puts "Please enter a valid move."
+      end
+      if answer[0] == 'h'
+        @human.cards << deck.deal
+        puts "You chose to hit!"
+        show_initial_cards
+      end
+      puts @human.busted? ? "Player goes bust!" : ""
+      break if answer[0] == 's' || @human.busted?
+    end
+  end
+
+  def dealer_turn
+    total = @dealer.total
+    loop do
+      break if total >= 17
+      @dealer.cards << deck.deal
+      total = @dealer.total
+    end
+
+    puts @dealer.busted? ? "Dealer goes bust!" : "Dealer chose to stay at #{total}."
+  end
+
+  def determine_winner
+    player_total = @human.total
+    dealer_total = @dealer.total
+    if player_total > 21
+      :player_busted
+    elsif dealer_total > 21
+      :dealer_busted
+    elsif dealer_total < player_total
+      :player
+    elsif dealer_total > player_total
+      :dealer
+    else
+      :tie
+    end
+  end
+
+  def show_result
+    puts ""
+    show_cards
+    puts ""
+    display_result
+  end
+
+  def display_result
+    result = determine_winner
+    case result
+    when :player_busted
+      puts "You busted! Dealer wins!"
+    when :dealer_busted
+      puts "Dealer busted! You win!"
+    when :player
+      puts "You win!"
+    when :dealer
+      puts "Dealer wins!"
+    when :tie
+      puts "It's a tie!"
+    end
   end
 
 end
