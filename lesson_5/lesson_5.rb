@@ -12,11 +12,12 @@ Lexical Scope:
 Lexically, searches the enclosing structures. Starting with the inner structure, then to the next structure.
 
 Encapsulation:
+Hiding pieces of functionality and making it unavailable to the rest of the code base.
 Restricts method use to certain classes or modules.
 Limiting the number of public methods.
-Benefits:
 
 Polymorphism:
+The ability for different types of data to respond to a common interface.
 Can be impletemented using duck typing and the two types of inheritance.
 
 Implementing methods in a way that can be implemented by many different kinds of objects.
