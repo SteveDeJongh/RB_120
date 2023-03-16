@@ -151,8 +151,6 @@ end
 
 # FE highlights how `Super()` can be used.
 
-=end
-
 # 4) Circular Queue
 
 class CircularQueue
@@ -224,3 +222,78 @@ puts queue.dequeue == 5
 puts queue.dequeue == 6
 puts queue.dequeue == 7
 puts queue.dequeue == nil
+
+# Using Shift and push
+
+class CircularQueue
+  attr_reader :queue
+
+  def initialize(num_spots)
+    @queue = []
+    @buffer_length = num_spots # Track max size of array
+  end
+
+  def dequeue
+    return nil if queue.empty? # returns nil if there are no element to remove
+    queue.shift # returns the element removed from array
+  end
+
+  def enqueue(element)
+    dequeue if queue.size == @buffer_length # removes oldest (first) element from the array if attempting to add an object passed max size
+    queue.push(element) # Adds new object to end (newist) of array.
+  end
+end
+
+=end
+
+# 5) Stack Machine Interpretation
+
+class Minilang
+  def initialize(operations)
+    @ops = operations.split
+    @register = 0
+    @stack = []
+
+  end
+
+  def eval
+    
+
+  end
+
+  private
+
+  def PUSH
+    @stack << @register
+  end
+
+  def ADD
+    @register += @stack.pop
+  end
+
+  def SUB
+    @register -= @stack.pop
+  end
+
+  def MULT
+    @register = @register * @stack.pop
+  end
+
+  def DIV
+    @register = (@register / @stack.pop).to_i
+  end
+
+  def MOD
+    @register = (@register % @stack.pop).to_i
+  end
+
+  def POP
+    @register = @stack.pop
+  end
+
+  def PRINT
+    @register
+  end
+end
+
+Minilang.new('PRINT').eval
