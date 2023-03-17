@@ -249,51 +249,63 @@ end
 # 5) Stack Machine Interpretation
 
 class Minilang
+  ACTIONS = %w(PUSH ADD SUB MULT DIV MOD POP PRINT)
+
   def initialize(operations)
     @ops = operations.split
-    @register = 0
-    @stack = []
-
   end
 
   def eval
-    
-
+    @stack = []
+    @register = 0
+    @ops.each {|step| eval_token(step)}
+    # Error MSG
   end
 
   private
 
-  def PUSH
+  def eval_token(token)
+    binding.pry
+    if ACTIONS.include?(token)
+      send(token.downcase)
+    elsif token =~ /\A[-+]?\d+\z/
+      @register = token.to_i
+    else
+      # raise error
+    end
+  end
+
+  def push
     @stack << @register
   end
 
-  def ADD
+  def add
     @register += @stack.pop
   end
 
-  def SUB
+  def sub
     @register -= @stack.pop
   end
 
-  def MULT
+  def mult
     @register = @register * @stack.pop
   end
 
-  def DIV
+  def div
     @register = (@register / @stack.pop).to_i
   end
 
-  def MOD
+  def mod
     @register = (@register % @stack.pop).to_i
   end
 
-  def POP
+  def pop
     @register = @stack.pop
   end
 
-  def PRINT
-    @register
+  def print
+    puts @register
   end
 end
 
-Minilang.new('PRINT').eval
+Minilang.new('8 PRINT').eval
