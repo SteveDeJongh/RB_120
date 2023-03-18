@@ -74,10 +74,6 @@ child = Child.new
 child.hello('Bob') #=> How are you today? # To call the Parent version, we can change the method names, or call super
 # to call both hello methods.
 
-
-
-=end
-
 # 4)
 
 # class Cat
@@ -137,6 +133,7 @@ p fluffy.who_am_i? # Fluffy
 
 p fluffy.what_am_i?.what_am_i? # Persian
 
+=end
 
 
 
