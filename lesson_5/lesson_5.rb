@@ -103,3 +103,6 @@ How Ruby searches for a constant.
 To ignore the lexical search, we can use the self.class::CONSTANT to start the search in the inheritance chain.
 
 =end
+
+# Nouns: Meal, items (burger, side, drink), option, cost, order, customer
+# Verbs: Order, choose an option, total

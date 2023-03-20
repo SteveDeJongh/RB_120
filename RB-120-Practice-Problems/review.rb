@@ -1,5 +1,32 @@
 ##### RB 120 OOP Review ####
 
+# RB 129 Assesment Format
+# Written:
+# ~20 questions, 3 hours to complete.
+# Interview:
+# Explain concepts with precision while writing out code examples.
+
+# Specific Topics of Interest
+# Classes and objects
+# Use attr_* to create setter and getter methods
+# How to call setters and getters
+# Instance variables, class variables, and constants, including the scope of each type and how inheritance can affect that scope
+# Instance methods vs. class methods
+# Method Access Control
+# Referencing and setting instance variables vs. using getters and setters
+# Class inheritance, encapsulation, and polymorphism
+# Modules
+# Method lookup path
+# self
+# Calling methods with self
+# More about self
+# Reading OO code
+# Fake operators and equality
+# Working with collaborator objects
+# Create a code spike
+
+# OOP LS 120 Questions
+
 # March 17th RB 129 Study Session
 =begin
 RB 129 assessment FORMAT
@@ -136,4 +163,52 @@ p fluffy.what_am_i?.what_am_i? # Persian
 =end
 
 
+################################################################################################
+###################################### LS 120 Questions ########################################
+################################################################################################
+=begin
 
+1) What is OOP and why is it important?
+
+OOP is an abreviation of Object Oritented programming. It's a programming paradigm that was created to deal
+with the growing complexity of large software systems. The approach helps with maintenance, and avoids issues
+where one small change an trigger a ripple effect of problems throughout the code.
+
+OOP enables programmers to create containers for data that can be changed and manipulated without affecting the
+rest of the program.
+
+2) What is encapsulation?
+
+Encalsulation is hiding pieces of functionality and making it unavailable to teh rest of the code base.
+It's a form of data protection, and defines the boundaries of your application and allows your code to acheive
+new levels of complexity. To accomplish this in ruby, you create objects and exposing interfaces (methods)
+to interact with those objects.
+
+Creating objects also enables the programmer to thing on a new level of abstraction with objects represented
+as real world nouns and given methods that describe the behavior.
+
+3) How does encapsulation relate to the public interface of a class?
+
+4) What is an object?
+An object is an instance of a class. The object are created from the mold of a class, and contain state.
+Individual objects will contain different information from other objects, but are instances of the same class.
+
+5) What is a class?
+
+Classes can be thought of as molds of which objects are created from. Classes contain the defined behaviors and
+attributes of it's objects.
+
+6) What is instantiation?
+
+Instantiation is the workflow of creating a new object of a class and storing it in a variable. This is done 
+by using the `new` keyword on the classes name. ie : steve = Person.new
+
+7) What is polymorphism?
+
+Polymorphism is the ability of different types of data to respond to the same method invocation, often, in different
+ways.
+
+When two or more object types have a method with the same name, we can invoke that method with any of those objects.
+When we don't care what type of object is calling the method, we're using polymorphism.
+
+8) 
