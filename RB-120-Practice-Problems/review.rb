@@ -211,4 +211,100 @@ ways.
 When two or more object types have a method with the same name, we can invoke that method with any of those objects.
 When we don't care what type of object is calling the method, we're using polymorphism.
 
-8) 
+8) Explain two different ways to implement polymorphism.
+
+Polymorphism can be implemented using inheritance (either class or interface(modules)) or duck typing.
+An example of polymorphism using inheritance would be having a vehicle superclass with a `move` method, and subclasses `racecar`, `minivan`
+also with `move` methods.
+
+class Vehicle
+  def move
+    "We're moving!"
+  end
+end
+
+class Racecar < Vehicle
+  def move
+    "Speeds away!"
+  end
+end
+
+class Minivan < Vehicle; end
+
+van = Minivan.new
+rc = Racecar.new
+p van.move #=> We're moving!
+p rc.move #=> Speeds away!
+
+It can also be accomplished via ducktyping, when objects of unrelated types respond to the same method invocation.
+
+class Vehicle
+  def move
+    "Vehicle moving!"
+  end
+end
+
+class Person
+  def move
+    "Person is moving!"
+  end
+end
+
+van = Vehicle.new
+person = Person.new
+
+arr = [van, person]
+arr.each {|x| puts x.move}
+
+9) How does polymorphism work in relation to the public interface?
+
+Polymorhpism allows the programmer to use all different types of objects in the same way, even though the implementations can be
+dramatically different.
+
+10) What is duck typing? How does it relate to polymorphism - what problem does it solve?
+
+Duck typing is when object of different unrelated types both respond to the same method name. Duck typing allows polymorphism
+in scenarios where there is no logical link between classes and mixin modules.
+
+11) What is inheritance?
+
+Inheritance can come in two form, class inheritance or interface inheritance. Class inheritances is when a class subclasses from
+a supperclass and inherits all of it's behaviors. Interface inheritance is when a module is mixed in, and it's behavors can be used in
+the class.
+
+12) What is the difference between a superclass and a subclass?
+
+A superclass is a class from with a subclass inherits behavior from. A subclass is a class which inherits behavior from a superclass.
+
+13) what is a module?
+
+A module is a collection of behaviors that are usable in other classes via mixins. A module is mixed in using the `include` method ivnocation.
+A module can not instantiate an object.
+
+14) What is a mixin?
+
+A mixin in when a module has been included into a class.
+
+15) When is it good to use inheritance?
+
+Class based inheritance works great when it's used to model hierarchical domains. Inheritance is best used in a "is_a" relationship.
+Ie: a dog is a animal, and the dog class could subclass from the animal superclass.
+
+16) In inheritance, when would it be good to override a method?
+
+A good time to overrride a method would be when the subclass object can not use the inherited method.
+
+17) What is the method lookup path?
+18) When defining a class, we usually focus on state and behaviors. What is the difference between these two concepts?
+19) How do you initialize a new object?
+20) What is a constructor method?
+21) What is an instance variable, and how is it related to an object?
+22) What is an instance method?
+23) How do objects encapsulate state?
+24) What is the difference between classes and objects?
+25) How can we expose information about the state of the object using instance methods?
+26) What is a collaborator object, and what is the purpose of using collaborator objects in OOP?
+
+
+
+=end
