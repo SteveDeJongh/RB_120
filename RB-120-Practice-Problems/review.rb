@@ -295,16 +295,53 @@ Ie: a dog is a animal, and the dog class could subclass from the animal supercla
 A good time to overrride a method would be when the subclass object can not use the inherited method.
 
 17) What is the method lookup path?
+
+The method lookup path is the path ruby takes when searching for a method name.
+
 18) When defining a class, we usually focus on state and behaviors. What is the difference between these two concepts?
+
+State refers to the data associated with an individual object represented as instance variables, and are unique to each object of that class.
+Behaviors are methods available to all instances of that class.
+
 19) How do you initialize a new object?
+
+To instantiate a new object, you call `new` on the objects class, and pass to new any intiailzing arguments.
+
 20) What is a constructor method?
+
+The constructor method is the `initialize` method, a special method called whena new object is instnatiated.
+
 21) What is an instance variable, and how is it related to an object?
+
+Instance variables are variables tied to individual objects. They contain information regarding the objects state (ie: name, age, weight,etc..)
+They are identified by starting with a single `@` symbol, and scoped at the object level.
+
 22) What is an instance method?
+
+Instance methods are methods available to all objects of that class. They are often referred to as behaviors of that class, and are actions
+instances of that class can make.
+
 23) How do objects encapsulate state?
+
+Objects encapsulate state by the use of instance variables. Instance variables can contain anything, strings, arrays, intergers, other objects, etc.
+
 24) What is the difference between classes and objects?
+
+Classes are the defined mold of an object. They contain the instructions on data to retrive when instantiating a new object, and the behaviors
+availalbe to that object.
+
+Objects are created from classes, and contain individual states. Objects act on behaviors defined in the class.
+
 25) How can we expose information about the state of the object using instance methods?
+
+To expose information about an object, we use getter instnace methods. Getter methods retrieve and often output the information contained
+in an objects instance variables.
+
 26) What is a collaborator object, and what is the purpose of using collaborator objects in OOP?
 
+A collaborator object is an object that is part of another objects state. The object can be any type of object.
+Collaborator objects can often identify intended relationships between different objects in our code.
 
+# Page 2
 
 =end
