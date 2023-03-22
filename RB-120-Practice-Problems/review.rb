@@ -160,6 +160,12 @@ p fluffy.who_am_i? # Fluffy
 
 p fluffy.what_am_i?.what_am_i? # Persian
 
+######################## Spot Study session # 2 ########################
+
+
+
+
+
 =end
 
 
@@ -446,16 +452,97 @@ From within a class and used inside an instance method, self refers to the insta
 # Page 3
 
 40) What happens when you use self inside a class but outside of an instance method?
-41) Why do you need to use self when calling private setter methods?
+
+Using `self` inside a class, but outside of an instance variable, `self` refers to the class itself.
+
+41) Why do you need to use self when calling private setter methods? ********
+
+When calling private setter methods, it's important to use self to differentiate between initializing a new local variable vs changing
+the existing instance variable of the calling object.
+
 42) Why use self, and how does self change depending on the scope it is used in?
+
+We use self whenever we are calling an instnace method from within the class. `self` changes depending on it's scope by representing different
+objects. Used inside of an instance variables it represents the calling object. Used inside of the class but outside of an instance method
+it represents the class itself and used to define a class method.
+
 43) What is inheritance, and why do we use it?
+
+Inhertiance is when a class inherits the behaviors of a parent (superclass) class, or inherits behaviors from a module.
+
 44) Give an example of how to use class inheritance.
+
+class Animal
+
+end
+
+class Dog < Animal
+
+end
+
+The Dog class will inherit all behavors of the `Animal` class.
+
 45) Give an example of overriding. When would you use it?
+
+Using our previous example, if Animal had a `move` method which made the animal walk, but our `dog` class should `run` instead of `walk`,
+we could define a new `move` method in teh `dog` class to change the behavor for the dog.
+
+class Animal
+  def Move
+    "Walk"
+  end
+end
+
+class Dog < Animal
+  def Move # This method will override the `animal#Move` method thanks to Ruby method look up path.
+    "Run"
+  end
+end
+
 46) Give an example of using the super method. When would we use it?
+
+Class Animal
+  def intialize(age)
+    @age = age
+  end
+end
+
+Class Dog < Animal
+  def initialize(age)
+    super # program flow moves to superclass `initialize` method and passes all arguments by default.
+  end
+end
+
 47) Give an example of using the super method with an argument.
+
+Class Animal
+  def intialize(age)
+    @age = age
+  end
+end
+
+Class Dog < Animal
+  def initialize(age, breed)
+    super(age) # passes to super, so that our dog object has a @age instance variable, passes along the required argument as well.
+    @breed = breed
+  end
+end
+
 48) When creating a hierarchical structure, under what circumstance would a module be useful?
+
+A module is beneficial when some subclasses of a superclass, but not all, exhibit a particular behavior. Mixing in a module helps keep code DRY
+and allows the code to be reuses in various different classes. Modules typically use a "able" suffix on whatever verb vest describes the
+behavior.
+
 49) What is interface inheritance, and under what circumstance would it be useful in comparison to class inheritance?
+
+Interface inheritance is when mixin modules are used. Interface inheritance is useful when multiple, but not all, subclasses exhibit 
+a behavior.
+
 50) How is the method lookup path affected by module mixins and class inheritance?
+
+
+
 51) What is namespacing?
 52) How does Ruby provide the functionality of multiple inheritance?
 53) Describe the use of modules as containers.
