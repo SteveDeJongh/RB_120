@@ -23,7 +23,7 @@
 # Reading OO code
 # Fake operators and equality
 # Working with collaborator objects
-# Create a code spike
+# Create a code spike # Practice these! 3 in the SPOT wiki. Showing object heirarchy.
 
 # OOP LS 120 Questions
 
@@ -42,7 +42,6 @@ Be able to produce code examples for concepts of OOP
 Describe what concepts are at work.
 
 The goal of the tests are to test our understanding of the concepts and our mental models.
-
 
 # Example questions:
 1)
@@ -162,15 +161,150 @@ p fluffy.what_am_i?.what_am_i? # Persian
 
 ######################## Spot Study session # 2 ########################
 
+Have code examples for all different concepts, along with a written definition of each.
+
+Method lookup path Class, modules from bottom of list, superclass.
+Constant lookup path (lexical)
+
+module FourWheeler
+  WHEELS = 4
+end
+
+class Vehicle
+  def maintenance
+    "Changing #{FourWheeler::WHEELS} tires."
+  end
+end
+
+class Car < Vehicle
+  include FourWheeler
+
+  def wheels
+    WHEELS
+  end
+end
+
+car = Car.new
+puts car.wheels        # => 4 # finds the constant in the include module.
+puts car.maintenance  # Throws an error as vehicle does not include FourWheeler. Could use namespace (::) operator to access from Fourwheeler
+
+########## Code Spike Examples:
+
+### Dental Office Alumni (by Rona Hsu)
+There's a dental office called Dental People Inc.  Within this office, there's 2 oral surgeons, 2 orthodontists, 1 general dentist.
+Both general dentists and oral surgeons can pull teeth. Orthodontists cannot pull teeth.  Orthodontists straighten teeth.
+All of these aforementioned specialties are dentists. All dentists graduated from dental school.  Oral surgeons place implants.
+General dentists fill teeth
+
+Nouns: office, surgerons, orthodontists, dentist, 
+Verbs: pull teeth, straighten teeth, place implants, fill teeth.
+
+class Office; end
+
+class Dentist < Office
+  def initialzie(name, specialty)
+    @name = name
+    @speciality = specialty
+    @dentalschool = true
+  end
+end
+
+module PullTeethable
+  def pull_teeth
+  end
+end
+
+class OralSurgeron < Dentist
+  include PullTeethable
+
+  def initialize(name)
+    super(name, self.class)
+  end
+
+  def place_implant
+  end
+end
+
+class Orthodonsist < Dentist
+  def initialize(name)
+    super(name, self.class)
+  end
+
+  def straighten_teeth
+  end
+end
+
+class GeneralDentist < Dentist
+  include PullTeethable
+
+  def initialize(name)
+    super(name, self.class)
+  end
+
+  def fill_teeth
+  end
+end
+
+####### Other version.
+
+class DentalOffice 
+  def initialize(name)
+    @name = name 
+    @dentist = populate_staff 
+  end 
+
+  def populate_staff
+    staff = []
+    2.times { staff << OralSurgeon.new}
+    2.times { staff << Orthodontists.new} 
+    staff << GeneralDentist.new 
+    staff
+  end 
+end 
+
+module  Pullable 
+  def pull 
+    "I can pull Teeth!"
+  end 
+  
+end
 
 
+class Dentist 
+  def initialize
+    @degree = 'Dental School Graduate'
+  end 
+end 
 
+class OralSurgeon < Dentist 
+  include Pullable
+
+  def implants
+    "I can implant Teeth!"
+  end 
+end 
+
+class Orthodontists < Dentist
+
+  def straighten
+    'I can straighten Teeth!'
+  end 
+end 
+
+class GeneralDentist < Dentist
+  include Pullable
+
+  def fill_teeth
+    'I can fill teeth'
+  end 
+end 
+
+p DentalOffice.new('Dental People Inc.')
 
 =end
 
-
 ################################################################################################
-###################################### LS 120 Questions ########################################
+###################### OOP Question RB 120 - LS 120 Questions ##################################
 ################################################################################################
 =begin
 
