@@ -369,7 +369,11 @@ If we wanted to create just a getter method, we can use `attr_reader` or `attr_w
 
 31) How do you decide whether to reference an instance variable or a getter method?
 
-  class GoodDog
+In general it's best practice to use the getter method when referencing an instance variable. Using the getter method helps to maintain
+a consistent output for the variable in your code, and allows you to better manage the many locations it may be output. It also allows
+you to hide the raw data from the output.
+
+class GoodDog
   attr_accessor :name, :height, :weight
 
   def initialize(n, h, w)
@@ -399,14 +403,74 @@ puts sparky.info
 
 32) # Why does the .change_info method not work as expected here?
 
+In the above example, in the change_info method, the name, height, and weight assignments are occuring to newly created variables
+created at the local method scope. In order for us to instead call the setter methods, we must first append `self` to the method calls
+so that the code knows were calling the instance method, and not initializing a new local variable.
 
 33) When would you call a method with self?
+
+We call a method with `self` to disambiguate from initializing or referencing local variable of the same name. `self` tells ruby
+that we care calling the method.
+
 34) What are class methods?
+
+Class methods are method which are called on the class itself, without having to instantiate any objects. Class methods are where we put
+functionality that does not pertain to any individual object. Class methods can be used to output class variables, or information about the class.
+
 35) What is the purpose of a class variable?
+
+Class variables contain information that is relevant to the whole class. Things like the number of objects of the class that have been created,
+or general data that may be applicable to all intances of the class. Class methods are defined with two @ symbols and must be initialized
+at class creation time.
+
 36) What is a constant variable?
+
+Constants are variables that we never want to change. Constants are defined using all upper case letters, CONSTANT. 
+
 37) What is the default to_s method that comes with Ruby, and how do you override this?
+
+By default, `to_s` will output the object class, and encoding of the object ID (it's space in memmory).
+
+To override this, we need to define a new `to_s` method within our class.
+
+`to_s` is important as it is called automatically anytime we call `puts` on an object, and used in string interpolation.
+
 38) What are some important attributes of the to_s method?
+
+`to_s` is called when you use `puts`, and also in string interpolation.
+
 39) From within a class, when an instance method uses self, what does it reference?
+
+From within a class and used inside an instance method, self refers to the instance(object) itself.
+
+# Page 3
+
+40) What happens when you use self inside a class but outside of an instance method?
+41) Why do you need to use self when calling private setter methods?
+42) Why use self, and how does self change depending on the scope it is used in?
+43) What is inheritance, and why do we use it?
+44) Give an example of how to use class inheritance.
+45) Give an example of overriding. When would you use it?
+46) Give an example of using the super method. When would we use it?
+47) Give an example of using the super method with an argument.
+48) When creating a hierarchical structure, under what circumstance would a module be useful?
+49) What is interface inheritance, and under what circumstance would it be useful in comparison to class inheritance?
+50) How is the method lookup path affected by module mixins and class inheritance?
+51) What is namespacing?
+52) How does Ruby provide the functionality of multiple inheritance?
+53) Describe the use of modules as containers.
+54) Why should a class have as few public methods as possible?
+55) What is the private method call used for?
+56) What is the protected keyword used for?
+57) What are two rules of protected methods?
+58) Why is it generally a bad idea to override methods from the Object class, and which method is commonly overridden?
+59) What is the relationship between a class and an object?
+60) Explain the idea that a class groups behaviors.
+61) Objects do not share state between other objects, but do share behaviors
+62) The values in the objects' instance variables (states) are different, but they can call the same instance methods (behaviors) defined in the class.
+63) Classes also have behaviors not for objects (class methods).
+64) sub-classing from parent class. Can only sub-class from 1 parent; used to model hierarchical relationships
+mixing in modules. Can mix in as many modules as needed; Ruby's way of implementing multiple inheritance
 
 
 
