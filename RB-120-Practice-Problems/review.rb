@@ -32,6 +32,7 @@
 RB 129 assessment FORMAT
 Written:
 3 Hour time limit
+Look at the last question!
 
 Interview:
 Explaining concepts with code examples.
@@ -675,24 +676,261 @@ a behavior.
 
 50) How is the method lookup path affected by module mixins and class inheritance?
 
+mixin modules add areas for ruby to search for a method, before moving on to the objects superclass.
 
+The method look up path begins in the class, then the included modules from the bottom of the list first, then the superclass and it's mixin modules, etc.
 
 51) What is namespacing?
+
+Namespacing is using modules to group together similar classes under one module.
+
 52) How does Ruby provide the functionality of multiple inheritance?
+
+Ruby is a single inheritance language, meaning that classes can only subclass from 1 superclass. In order to work around this
+we can use mixin modules to add extra functionality to different classes by mixing in modules. A c;ass can mix in as many modules as it likes.
+
 53) Describe the use of modules as containers.
+
+Modules as containers are when modules contain behaviors (methods). This is very helpful for when methods may seem out of place for
+a class heirarchal system, but may be requried in mutliple places in your code.
+
 54) Why should a class have as few public methods as possible?
+
+Having as few public methods as possible helps us simplify using that class and protect data from undesired changes from the outer world.
+
 55) What is the private method call used for?
+
+A private method are methods that can only be used from within the class definition and are not able to be called from outside.
+
 56) What is the protected keyword used for?
+
+The protected keyword is used to indicate to ruby that any method below the keyword is protected. Protected methods are methods which
+are similar to private methods, but that they allow access between class instances (in comparison for example)
+
 57) What are two rules of protected methods?
+
+They can not be invoked outside of the class, and other instances of the class can invoke the method.
+
 58) Why is it generally a bad idea to override methods from the Object class, and which method is commonly overridden?
+
+Overrriding `object` class methods is generally a bad idea as the overriding method is often not the desired method to call. This can lead
+to problems debugging code, and often leads to argument errors.
+
+`to_s` is a commonly overridden object class method.
+
 59) What is the relationship between a class and an object?
+
+A Class is the mold of the object. The object will contain invidual state information, while the class will contain it's behaviors.
+
 60) Explain the idea that a class groups behaviors.
+
+The idea that class groups behaviors is that the class will contain all of the methods available to all instances of that class.
+All objects of the class can perform the same actions.
+
 61) Objects do not share state between other objects, but do share behaviors
-62) The values in the objects' instance variables (states) are different, but they can call the same instance methods (behaviors) defined in the class.
+
+Objects all share access to the same instance methods, but do no share their instance variables which store their individual state.
+
+62) The values in the objects' instance variables (states) are different, but they can call the same instance methods (behaviors)
+ defined in the class.
+
+
+
 63) Classes also have behaviors not for objects (class methods).
+
+Class methods are defined by appending `self` to the method name.
+
 64) sub-classing from parent class. Can only sub-class from 1 parent; used to model hierarchical relationships
 mixing in modules. Can mix in as many modules as needed; Ruby's way of implementing multiple inheritance
 
+Sub classing is typically a "is_a" relationship, while mixin modules are used for a "has_a" relationship.
 
+# Page 4
+
+65) understand how sub-classing or mixing in modules affects the method lookup path
+
+Ruby will first search the class for the method, then the mixin module list from bottom to top, then the superclass and it's modules.
+
+66) What will the following code output?
+
+class Animal
+  def initialize(name)
+    @name = name
+  end
+
+  def speak
+    puts sound
+  end
+
+  def sound
+    "#{@name} says "
+  end
+end
+
+class Cow < Animal
+  def sound
+    super + "moooooooooooo!"
+  end
+end
+
+daisy = Cow.new("Daisy")
+daisy.speak
+
+#=> Daisy says mooooooooooooo!
+
+67) 
+class Person
+  attr_writer :first_name, :last_name
+
+  def full_name
+    # omitted code
+    puts "#{@first_name} #{@last_name}" # added this line. or # @first_name + " " + @last_name
+  end
+end
+
+mike = Person.new
+mike.first_name = 'Michael'
+mike.last_name = 'Garcia'
+mike.full_name # => 'Michael Garcia'
+
+What code snippet can replace the "omitted code" comment to produce the indicated result? 
+
+68)
+class Student
+  attr_accessor :name, :grade
+
+  def initialize(name)
+    @name = name
+    @grade = nil
+  end
+
+  def change_grade(grade) # add this
+    self.grade = grade
+  end
+end
+
+priya = Student.new("Priya")
+priya.change_grade('A')
+p priya.grade # => "A"
+
+The last line in the above code should return "A". Which method(s) can we add to the Student class so the code works as expected?
+
+# Page 5
+
+69)
+In the example above, why would the following not work?
+
+def change_grade(new_grade)
+  grade = new_grade
+end
+
+The above code would be initializing a new localally scoped variable "grade" within the method and not reassigning the instance variable @grade
+or using the setter grade= method.
+
+70)
+On which lines in the following code does self refer to the instance of the MeMyselfAndI class referenced by i rather 
+than the class itself? Select all that apply.
+
+class MeMyselfAndI
+  self
+
+  def self.me
+    self
+  end
+
+  def myself
+    self #instance
+  end
+end
+
+i = MeMyselfAndI.new
+
+Line 842 only.
+
+71)
+Given the below usage of the Person class, code the class definition.
+
+bob = Person.new('bob')
+bob.name                  # => 'bob'
+bob.name = 'Robert'
+bob.name                  # => 'Robert'
+
+class Person
+  attr_accessor :name
+
+  def intialize(name)
+    @name = name
+  end
+end
+
+72)
+Modify the class definition from above to facilitate the following methods. Note that there is no name= setter method now.
+
+bob = Person.new('Robert')
+bob.name                  # => 'Robert'
+bob.first_name            # => 'Robert'
+bob.last_name             # => ''
+bob.last_name = 'Smith'
+bob.name                  # => 'Robert Smith'
+
+Hint: let first_name and last_name be "states" and create an instance method called name that uses those states.
+
+class Person
+  attr_accessor :first_name, :last_name
+
+  def initialize(name)
+    names = name.split(' ')
+    @first_name = names.first
+    @last_name = names.size > 1 ? names.last : ''
+  end
+
+  def name
+    "#{first_name} #{last_name}".strip
+  end
+end
+
+bob = Person.new('Robert')
+p bob.name                  # => 'Robert'
+p bob.first_name            # => 'Robert'
+p bob.last_name             # => ''
+p bob.last_name = 'Smith'
+p bob.name                  # => 'Robert Smith'
+
+73)
+Now create a smart name= method that can take just a first name or a full name, and knows how to set the first_name and last_name appropriately.
+
+class Person
+  attr_accessor :first_name, :last_name
+
+  def initialize(name)
+    names = name.split(' ')
+    @first_name = names.first
+    @last_name = names.size > 1 ? names.last : ''
+  end
+
+  def name
+    "#{first_name} #{last_name}".strip
+  end
+
+  def name=(full_name
+    names = full_name.split(' ')
+    @first_name = names.first
+    @last_name = names.size > 1 ? names.last : '')
+  end
+end
+
+bob = Person.new('Robert')
+bob.name                  # => 'Robert'
+bob.first_name            # => 'Robert'
+bob.last_name             # => ''
+bob.last_name = 'Smith'
+bob.name                  # => 'Robert Smith'
+
+bob.name = "John Adams"
+bob.first_name            # => 'John'
+bob.last_name             # => 'Adams'
+
+# Page 6
 
 =end
+
