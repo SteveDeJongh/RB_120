@@ -344,4 +344,70 @@ Collaborator objects can often identify intended relationships between different
 
 # Page 2
 
+27) What is an accessor method?
+
+An accessor method is a method created to either return or set the value of an objects instnace variable. Ruby convention states the method
+name should be the same as the instance variable itself, adding a `=` for the setter method. Ruby's syntactical sugar allows for setter
+methods to be called in very reader friendly manner, obj.name = "new_name" instead of obj.name=("new_name").
+
+28) What is a getter method?
+
+A getter method is a method written to retrieve and often output the value of an instnace variable.
+
+29) What is a setter method?
+
+A setter method is a method used to assign a value to an objects instance variable. Typically written as `varname=(newname)`, ruby's syntactical
+sugar allows for the method to be called as so: obj.name = "Steve".
+
+30) What is attr_accessor?
+
+An accessor method is a method created using `attr_accessor` followed by a symbol of the instance variable. `attr_accessor` creates
+getter and setter methods for the instance variable listed as symbol, and will also initialize the instance variable if not already
+defined.
+
+If we wanted to create just a getter method, we can use `attr_reader` or `attr_writer` for just a setter method.
+
+31) How do you decide whether to reference an instance variable or a getter method?
+
+  class GoodDog
+  attr_accessor :name, :height, :weight
+
+  def initialize(n, h, w)
+    @name = n
+    @height = h
+    @weight = w
+  end
+
+  def speak
+    "#{name} says arf!"
+  end
+
+  def change_info(n, h, w)
+    name = n
+    height = h
+    weight = w
+  end
+
+  def info
+    "#{name} weighs #{weight} and is #{height} tall."
+  end
+end
+
+sparky.change_info('Spartacus', '24 inches', '45 lbs')
+puts sparky.info      
+# => Sparky weighs 10 lbs and is 12 inches tall.
+
+32) # Why does the .change_info method not work as expected here?
+
+
+33) When would you call a method with self?
+34) What are class methods?
+35) What is the purpose of a class variable?
+36) What is a constant variable?
+37) What is the default to_s method that comes with Ruby, and how do you override this?
+38) What are some important attributes of the to_s method?
+39) From within a class, when an instance method uses self, what does it reference?
+
+
+
 =end
