@@ -1241,6 +1241,9 @@ teddy = Dog.new("Teddy")
 puts teddy.dog_name                       # => ??
 # What will this return, and why?
 
+This code will return "bark! bark!  bark! bark!" as the @name instance variable is not initialized and will return nil. 
+As the Dog class intiailize method does not pass to the Animal class initialize method via super, the @name variable is not assigned `Teddy`.
+
 102)
 module Swim
   def enable_swimming
@@ -1260,8 +1263,16 @@ teddy = Dog.new
 teddy.swim                                  
 # How do you get this code to return “swimming”? What does this demonstrate about instance variables?
 
+In order for this code to return `swimming`, we must first call `teddy.enable_swimming` to initialize the @can_swim` variable to true
+
 103) Are class variables accessible to sub-classes?
+
+Yes, they are accessible to subclasses.
+
 104) Why is it recommended to avoid the use of class variables when working with inheritance?
+
+It's recommended to avoid using class variables when working with inheritance as there is only one copy of the variable available 
+to all subclasses.
 
 105)
 class Vehicle
@@ -1272,21 +1283,235 @@ class Vehicle
   end
 end
 
-Vehicle.wheels                              # => ??
+Vehicle.wheels                              # => ?? 4
 
 class Motorcycle < Vehicle
   @@wheels = 2
 end
 
-Motorcycle.wheels                           # => ??
-Vehicle.wheels                              # => ??
+Motorcycle.wheels                           # => ?? 2
+Vehicle.wheels                              # => ?? 2
 
 class Car < Vehicle
 end
 
-Car.wheels                                  # => ??
+Car.wheels                                  # => ?? 2
 # What would the above code return, and why?
 
+On line 1289, we are reassinging the class variable wheels in Vehicle to 2, all future calls to @@wheels made in vehicle or it's subclasses will
+reference this new updated @@wheels value.
 
+# Page 11
+
+106) Is it possible to reference a constant defined in a different class?
+
+In order to reference a constant defined in a diferrent class which is not an ancestor, we can use the namespace resolution operator (::).
+
+107) What is the namespace resolution operator?
+
+The namespace resolution operator `::` allows you to reach into other classes that are not in scope to reference constants.
+
+108) How are constants used in inheritance?
+
+Ruby will traverse up the inheritance heirarchy of the structure that references the constant.
+
+109)
+module Maintenance
+  def change_tires
+    "Changing #{WHEELS} tires."
+  end
+end
+
+class Vehicle
+  WHEELS = 4
+end
+
+class Car < Vehicle
+  include Maintenance
+end
+
+a_car = Car.new
+a_car.change_tires
+# Describe the error and provide two different ways to fix it.
+
+# The code raises an error due to the call to the Vehicle constant WHEELS. In order to fix this we can use namespace resolution operator
+# and change the reference to Vehicle::WHEELS.
+
+110) What is lexical scope?
+
+Lexical scope is searching the surrounding structure for the reference.
+
+111) When dealing with code that has modules and inheritance, where does constant resolution look first?
+
+Constant resolution first searches lexically, then the inheritance chain in the normal manner class first then modules from bottom to top.
+
+112)
+class Person
+  attr_accessor :name, :age
+
+  def initialize(name, age)
+    @name = name
+    @age = age
+  end
+
+  def >(other)
+    age > other.age
+  end
+end
+
+bob = Person.new("Bob", 49)
+kim = Person.new("Kim", 33)
+puts "bob is older than kim" if bob > kim
+
+In order to make this code work, we need to create a > method within the Person class
+def >(other)
+  age > other.age
+end
+
+113)
+my_hash = {a: 1, b: 2, c: 3}
+my_hash << {d: 4}  
+# What happens here, and why?
+
+An error is raised here for undefined method, as `<<` is actually a defined method and not an operator.
+
+# Page 12
+
+114) When do shift methods make the most sense?
+
+Shift methods make sense when dealer with a class that represents a collection. When impltementing fake operators, choose some functionaility
+that makes sense when used.
+
+115)
+  class Team
+  attr_accessor :name, :members
+
+  def initialize(name)
+    @name = name
+    @members = []
+  end
+
+  def <<(person)
+    members.push person
+  end
+
+  def +(other_team)
+    members + other_team.members
+  end
+end
+
+# we'll use the same Person class from earlier
+
+cowboys = Team.new("Dallas Cowboys")
+cowboys << Person.new("Troy Aikman", 48)
+
+niners = Team.new("San Francisco 49ers")
+niners << Person.new("Joe Montana", 59)
+dream_team = cowboys + niners               # what is dream_team?
+# What does the Team#+ method currently return? What is the problem with this? How could you fix this problem?
+The Team+ method currently returns a new array of players. That may be fine, but if we instead wanted to return a new team object we'd need
+to make some changed.
+
+def +(other_team)
+  temp_team = Team.new('Temprorary team')
+  temp_team.members = members + other_team.members
+  temp_team
+end
+
+116) Explain how the element getter (reference) and setter methods work, and their corresponding syntactical sugar.
+
+Element getter and setter methods are given extreme use of ruby's syntactical suger. The Array element reference provides a great example:
+Arr = [1,2,3]
+
+arr[1] = 2, which is eactually a call to arr.[](1) = 2
+
+The setter method is more extreme:
+arr[1] = 4 # Arr = [1,4,3]
+Is actually a call to:
+arr.[]=(1, 4) # Arr = [1,4,3]
+
+117) How is defining a class different from defining a method?
+
+When defining a class, we used the class keyword followed by the class name in CamelCase, rather than `def` and snake_case
+
+118) How do you create an instance of a class? 
+  
+By calling the class method `new`
+
+119) What are two different ways that the getter method allows us to invoke the method in order to access an instance variable?
+
+Inside the class, we can just call the getter method, or outside the class, we can call the method on an instance of the class.
+
+120) When you have a mixin and you use a ruby shorthand accessor method, how do you write the code (what order do
+   you write the getter/setters and the mixin)? What about using a constant?
+
+In the class definition, the mixin goes above accessor, and the constant goes above accessor
+
+121) How do you define a class method?
+
+Define a class method by prepending `self` to the method name.
+
+122)
+class Cat
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+  end
+  
+  def rename(new_name)
+    name = new_name
+  end
+end
+
+kitty = Cat.new('Sophie')
+p kitty.name # "Sophie"
+kitty.rename('Chloe')
+p kitty.name # "Chloe"
+# What is wrong with the code above? Why? What principle about getter/setter methods does this demonstrate?
+
+In the imethod `rename`, we need to prepend `self` to `name` on line 9, otherwise Ruby assumes we’re
+initializing a new local variable `name` and assigning it to the argument passed in through the parameter `name`. 
+
+# Page 13
+
+123) Self refers to the ______ _______. calling object
+
+124) How do you print the object so you can see the instance variables and their values along with the object?
+
+p object
+
+125) When writing the name of methods in normal/markdown text, how do you write the name of an instance method? A class method?
+
+`ClassName#instance_method_name`, `ClassName::class_method_name`
+
+126) How do you override the to_s method? What does the to_s method have to do with puts?
+
+You can override the to_s method by defining a to_s method in the relevant class. `puts` automatically calls `to_s` when outputting an object. 
+
+127)# Using the following code, allow Truck to accept a second argument upon instantiation. Name the parameter bed_type and implement the modification so that Car continues to only accept one argument.
+
+class Vehicle
+  attr_reader :year
+
+  def initialize(year)
+    @year = year
+  end
+end
+
+class Truck < Vehicle
+  def initialize(year, bed_type)
+    super(year)
+    @bed_type = bed_type
+end
+
+class Car < Vehicle
+end
+
+truck1 = Truck.new(1994, 'Short')
+puts truck1.year
+puts truck1.bed_type
+
+# Page 14
 
 =end
