@@ -912,10 +912,10 @@ class Person
     "#{first_name} #{last_name}".strip
   end
 
-  def name=(full_name
+  def name=(full_name)
     names = full_name.split(' ')
     @first_name = names.first
-    @last_name = names.size > 1 ? names.last : '')
+    @last_name = names.size > 1 ? names.last : ''
   end
 end
 
@@ -932,5 +932,177 @@ bob.last_name             # => 'Adams'
 
 # Page 6
 
+74) Using the class definition from step #3 (73), let's create a few more people -- that is, Person objects.
+
+bob = Person.new('Robert Smith')
+rob = Person.new('Robert Smith')
+
+If we're trying to determine whether the two objects contain the same name, how can we compare the two objects?
+
+#=> bob.name == rob.name
+
+This will use the string values in instance variables @name, and using string#== to compare.
+
+75) Continuing with our Person class definition, what does the below print out?
+
+bob = Person.new("Robert Smith")
+puts "The person's name is: #{bob}" #=> The person's name is: <Person:OBJECT ID>
+
+76) Let's add a to_s method to the class:
+
+class Person
+  # ... rest of class omitted for brevity
+
+  def to_s
+    name
+  end
+end
+Now, what does the below output?
+
+bob = Person.new("Robert Smith")
+puts "The person's name is: #{bob}" #=> "The person's name is : Robert Smith"
+
+77) Create an empty class named Cat.
+
+class Cat; end
+
+78) Using the code from the previous exercise, create an instance of Cat and assign it to a variable named kitty.
+
+class Cat; end
+
+kitty = Cat.new
+
+79)
+class Wedding
+  attr_reader :guests, :flowers, :songs
+
+  def prepare(preparers)
+    preparers.each do |preparer|
+      case preparer
+      when Chef
+        preparer.prepare_food(guests)
+      when Decorator
+        preparer.decorate_place(flowers)
+      when Musician
+        preparer.prepare_performance(songs)
+      end
+    end
+  end
+end
+
+class Chef
+  def prepare_food(guests)
+    # implementation
+  end
+end
+
+class Decorator
+  def decorate_place(flowers)
+    # implementation
+  end
+end
+
+class Musician
+  def prepare_performance(songs)
+    #implementation
+  end
+end
+
+# The above code would work, but it is problematic. What is wrong with this code, and how can you fix it?
+
+The above `prepare` method has too many dependencies. It relies on specific class and their names, and need to know which method it
+should call for each object, along with the appropriate argument the methods require.
+
+We can change the implementation so that each class has a `prepare_wedding` method, which calls the method they require. We'll pass
+in `self` as the argument, and gather the required information for the method implementation at each class level.
+
+# Page 7
+
+80) What happens when you call the p method on an object? And the puts method?
+
+Calling `p` on an object will return : <Object_class_name: followed by an encoding of the object ID, and any instance variables and their values.
+Calling `puts` on an object will return : <Object class name: follow by an encoding of the object ID>
+
+81) What is a spike?
+
+A Spike is exploratory code to play around with the problem.
+
+82) When writing a program, what is a sign that you’re missing a class?
+
+repetive nouns in method names are a sign that you're missing a class. ie: "format_move(human.move)" instead of
+`human.move.display`
+
+83) What are some rules/guidelines when writing programs in OOP?
+-When naming methods, don't include the class name. ie: player.info, instead of player.player_info
+-Avoid long method invocation chains.
+-Avoid design patterns for now.
+
+84)
+class Student
+  attr_accessor :grade
+
+  def initialize(name, grade=nil)
+    @name = name
+  end
+end
+
+ade = Student.new('Adewale')
+ade # => #<Student:0x00000002a88ef8 @grade=nil, @name="Adewale">
+# Why does this code not have the expected return value?
+
+ade will return "Student:encoding of object id, and @name ='Adewall'"
+
+As the `grade` instance variable is not initialized, the `ade` object does not yet contain that state.
+Calling ade.grade return nil, not because it's default value is `nil`, but because it has yet to be initialized.
+
+85)
+class Character
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+  end
+
+  def speak
+    "#{@name} is speaking." # Change to `name`. this will instead call the `name` method of the calling object, which is a Knight.
+  end
+end
+
+class Knight < Character
+  def name
+    "Sir " + super
+  end
+end
+
+sir_gallant = Knight.new("Gallant")
+sir_gallant.name # => "Sir Gallant"
+sir_gallant.speak # => "Sir Gallant is speaking."
+# What change(s) do you need to make to the above code in order to get the expected output?
+
+Change on line 1067
+
+# Page 8
+
 =end
 
+class Character
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+  end
+
+  def speak
+    "#{name} is speaking."
+  end
+end
+
+class Knight < Character
+  def name
+    "Sir " + super
+  end
+end
+
+sir_gallant = Knight.new("Gallant")
+p sir_gallant.name # => "Sir Gallant"
+p sir_gallant.speak # => "Sir Gallant is speaking."
