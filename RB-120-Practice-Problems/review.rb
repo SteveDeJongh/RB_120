@@ -1083,26 +1083,210 @@ Change on line 1067
 
 # Page 8
 
-=end
+86)
+class FarmAnimal
+  def speak
+    "#{self.class} says " #add .class to self.
+  end
+end
 
-class Character
-  attr_accessor :name
+class Sheep < FarmAnimal
+  def speak
+    super + "baa!"
+  end
+end
 
+class Lamb < Sheep
+  def speak
+    super + "baaaaaaa!" # Add super.
+  end
+end
+
+class Cow < FarmAnimal # Add FarmAnimal class inhertiance
+  def speak
+    super + "mooooooo!"
+  end
+end
+
+p Sheep.new.speak # => "Sheep says baa!"
+p Lamb.new.speak # => "Lamb says baa!baaaaaaa!"
+p Cow.new.speak # => "Cow says mooooooo!"
+# Make the changes necessary in order for this code to return the expected values.
+
+87)
+class Person
   def initialize(name)
     @name = name
   end
+end
 
-  def speak
-    "#{name} is speaking."
+class Cat
+  def initialize(name, owner)
+    @name = name
+    @owner = owner
   end
 end
 
-class Knight < Character
-  def name
-    "Sir " + super
+sara = Person.new("Sara")
+fluffy = Cat.new("Fluffy", sara)
+Identify all custom defined objects that act as collaborator objects within the code.
+
+The person object `Sara` is a collaborator object, as it's used in an instance variable in fluffy.
+
+# Page 9
+
+88) How does equivalence work in Ruby?
+
+For most objects, the `==` operator compares the values of the objects, and is most frequently used. The `==` operator is actually a 
+method defined in the BasicObject class, and overridden in most built in ruby classes. The basicobject `==` method actually checks if
+the two objects are the same object.
+
+89) How do you determine if two variables actually point to the same object?
+
+Checking if variables point to the same object, we can use `equal?`
+
+90) What is == in Ruby? How does == know what value to use for comparison?
+
+`==` in ruby is actually a defined method. Most classes have a defined `==` method indicating what values to use for comparison.
+
+91) Is it possible to compare two objects of different classes?
+
+Yes, as `==` can be implemented however you wish. This is seen in `Interger#==` and `float#==` as they can both handle comparison
+of integers against floats and vice versa.
+
+92) What do you get “for free” when you define a == method?
+
+The `!=` (not equals) method.
+
+93)
+arr1 = [1, 2, 3]
+arr2 = [1, 2, 3]
+arr1.object_id == arr2.object_id      # => ?? false
+
+sym1 = :something
+sym2 = :something
+sym1.object_id == sym2.object_id      # => ?? True
+
+int1 = 5
+int2 = 5
+int1.object_id == int2.object_id      # => ?? True
+# What will the code above return and why?
+
+Symbols and integers include a performance optimization where if they have the same value, they are also the same object. This is because
+symbols and integers are immutable, and can't be modified.
+
+94) What is the === method?
+
+the `===` method is similar to `==` in that it is also an instance method, but the `===` method checks wether the left side group
+would contain the right side comparison.
+
+String (class) === "hello" #=> True, "Hello" is an instance of the String class.
+String (class) === 15 #=> False, integer 15 is not an instance of String
+
+95) What is the eql? method?
+
+The `eql?` method checks if both objects are the same object, and contain the same value.
+
+96) What is the scoping rule for instance variables?
+
+Instance variables are scoped at the object level. This means that the instance variable is accessible in an objects instance methods,
+even if initialized outside of that method.
+
+97)
+class Person
+  def get_name
+    @name                     # the @name instance variable is not initialized anywhere
   end
 end
 
-sir_gallant = Knight.new("Gallant")
-p sir_gallant.name # => "Sir Gallant"
-p sir_gallant.speak # => "Sir Gallant is speaking."
+bob = Person.new
+bob.get_name                  # => ??
+# What is the return value, and why?
+
+The code would return `nil`. This is because the instance variable is not initialized anywhere in the code, and uninitialized instance variables
+will not raise a NameError.
+
+98) What are the scoping rules for class variables? What are the two main behaviors of class variables?
+
+Class variables are scoped at the object level. All class objects share 1 copy of the class variable.
+Class methods can access class variables provided the clrass variable has been initalized prior to calling the method.
+
+99) What are the scoping rules for constant variables?
+
+Constants have a lexical scope. This means that Ruby will search the surrouding strucutre or the constant reference.
+
+100) How does sub-classing affect instance variables?
+
+Subclasses can access instance variables in supercalsses providing the variable has been initialzied, the same occurs with interface inheritance
+by mixin modules, prodiving the method intializing the variables has been called before trying to access it.
+
+# Page 10
+
+101)
+class Animal
+  def initialize(name)
+    @name = name
+  end
+end
+
+class Dog < Animal
+  def initialize(name); end
+
+  def dog_name
+    "bark! bark! #{@name} bark! bark!"    
+  end
+end
+
+teddy = Dog.new("Teddy")
+puts teddy.dog_name                       # => ??
+# What will this return, and why?
+
+102)
+module Swim
+  def enable_swimming
+    @can_swim = true
+  end
+end
+
+class Dog
+  include Swim
+
+  def swim
+    "swimming!" if @can_swim
+  end
+end
+
+teddy = Dog.new
+teddy.swim                                  
+# How do you get this code to return “swimming”? What does this demonstrate about instance variables?
+
+103) Are class variables accessible to sub-classes?
+104) Why is it recommended to avoid the use of class variables when working with inheritance?
+
+105)
+class Vehicle
+  @@wheels = 4
+
+  def self.wheels
+    @@wheels
+  end
+end
+
+Vehicle.wheels                              # => ??
+
+class Motorcycle < Vehicle
+  @@wheels = 2
+end
+
+Motorcycle.wheels                           # => ??
+Vehicle.wheels                              # => ??
+
+class Car < Vehicle
+end
+
+Car.wheels                                  # => ??
+# What would the above code return, and why?
+
+
+
+=end
