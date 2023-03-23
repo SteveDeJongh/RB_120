@@ -25,7 +25,8 @@
 # Working with collaborator objects
 # Create a code spike # Practice these! 3 in the SPOT wiki. Showing object heirarchy.
 
-# OOP LS 120 Questions
+# OOP LS 120 Questions - Done
+# RB 129 Practice Problems - 
 
 # March 17th RB 129 Study Session
 =begin
@@ -1475,11 +1476,13 @@ initializing a new local variable `name` and assigning it to the argument passed
 
 # Page 13
 
-123) Self refers to the ______ _______. calling object
+123) Self refers to the ______ _______.
+
+The calling object.
 
 124) How do you print the object so you can see the instance variables and their values along with the object?
 
-p object
+To print the object, an encoding of it's object ID, and it's instance variables, use `p`
 
 125) When writing the name of methods in normal/markdown text, how do you write the name of an instance method? A class method?
 
@@ -1489,7 +1492,8 @@ p object
 
 You can override the to_s method by defining a to_s method in the relevant class. `puts` automatically calls `to_s` when outputting an object. 
 
-127)# Using the following code, allow Truck to accept a second argument upon instantiation. Name the parameter bed_type and implement the modification so that Car continues to only accept one argument.
+127)# Using the following code, allow Truck to accept a second argument upon instantiation. Name the parameter bed_type and implement
+ the modification so that Car continues to only accept one argument.
 
 class Vehicle
   attr_reader :year
@@ -1503,6 +1507,7 @@ class Truck < Vehicle
   def initialize(year, bed_type)
     super(year)
     @bed_type = bed_type
+  end
 end
 
 class Car < Vehicle
@@ -1513,5 +1518,50 @@ puts truck1.year
 puts truck1.bed_type
 
 # Page 14
+
+128)
+# Given the following code, modify #start_engine in Truck by appending 'Drive fast, please!' to the return value of #start_engine 
+in Vehicle. The 'fast' in 'Drive fast, please!' should be the value of speed.
+
+class Vehicle
+  def start_engine
+    'Ready to go!'
+  end
+end
+
+class Truck < Vehicle
+  def start_engine(speed)
+    super() + “Go #{speed} please!”
+  end
+end
+
+truck1 = Truck.new
+puts truck1.start_engine('fast')
+
+# Expected output:
+
+# Ready to go! Drive fast, please!
+
+129) When do you use empty parentheses with super?
+
+When you want to invoke a superclass methods and explicitly pass no arguments to the superclass method (to prevent an argument error)
+
+130) How do you find the lookup path for a class? (lookup path stops when you find it)
+
+Call the ancestors method on the class
+
+131) What is namespacing, and how do you instantiate a class contained in a module?
+
+Namespacing is grouping related classes, perhaps to prevent similarly named methods from colliding. You can instantiate a
+ class contained in a module by using the namespace resolution operator, :: (Module::Class.new)
+
+132) When using getters and setters, in what scenario might you decide to only use a getter, and why is this important?
+
+You might only need a getter if you only want to access the data, but don’t want or need to be able to change it. 
+
+133) When might it make sense to format the data or prevent destructive method calls changing the data by using a custom
+ getter or setter method?
+
+Any time you want to control how the user is able to access or change data - getters and setters protect the raw data
 
 =end
