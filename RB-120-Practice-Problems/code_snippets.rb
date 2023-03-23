@@ -145,9 +145,9 @@
 #   end
 
 #   def change_info(n, h, w)
-#     self.name = n # Append self. instead of just `name`
-#     self.height = h # Append self. instead of just `name`
-#     self.weight = w # Append self. instead of just `name`
+#     self.name = n # prepend self. instead of just `name`
+#     self.height = h # prepend self. instead of just `name`
+#     self.weight = w # prepend self. instead of just `name`
 #   end
 
 #   def info
@@ -163,7 +163,7 @@
 # We expect the code above to output `”Spartacus weighs 45 lbs and is 24 inches tall.”` Why does our `change_info` method not work as expected?
 
 # The current implementation of `change_info` is actually initiailizing new local variables for `name`, `height`, and `weight`.
-# In order for `change_info` to work as intended, we would need to append `self` to each variable to that it insteads references
+# In order for `change_info` to work as intended, we would need to prepend `self` to each variable to that it insteads references
 # each of the calling objects instance variables.
 
 # 6.
@@ -175,7 +175,7 @@
 #   end
   
 #   def change_name
-#     self.name = name.upcase # Append name with `self.`
+#     self.name = name.upcase # prepend name with `self.`
 #   end
 # end
 
@@ -187,33 +187,37 @@
 # In the code above, we hope to output `'BOB'` on `line 16`. Instead, we raise an error. Why? How could we adjust this code to output `'BOB'`? 
 
 # This is another example of initializing a local variable rather than modifying the objects instance variable. Here, we need to again
-# append `self` to the instance variable to referencing the calling objects instance variable setter method.
+# prepend `self` to the instance variable to referencing the calling objects instance variable setter method.
 
 # 7.
-class Vehicle
-  @@wheels = 4
+# class Vehicle
+#   @@wheels = 4
 
-  def self.wheels
-    @@wheels
-  end
-end
+#   def self.wheels
+#     @@wheels
+#   end
+# end
 
-p Vehicle.wheels                             
+# p Vehicle.wheels                             #=> 4
 
-class Motorcycle < Vehicle
-  @@wheels = 2
-end
+# class Motorcycle < Vehicle
+#   @@wheels = 2
+# end
 
-p Motorcycle.wheels                           
-p Vehicle.wheels                              
+# p Motorcycle.wheels                           #=> 2
+# p Vehicle.wheels                              #=> 2
 
-class Car < Vehicle; end
+# class Car < Vehicle; end
 
-p Vehicle.wheels
-p Motorcycle.wheels                           
-p Car.wheels     
+# p Vehicle.wheels #=> 2
+# p Motorcycle.wheels #=> 2   
+# p Car.wheels     #=> 2
 
-# # What does the code above output, and why? What does this demonstrate about class variables, and why we should avoid using class variables when working with inheritance?
+# What does the code above output, and why? What does this demonstrate about class variables, and why we should avoid
+# using class variables when working with inheritance?
+
+# This highlights the fact that when using inheritance, 1 copy of the class variable is shared by all 
+# subclass that inherit the class variable from their superclass.
 
 # 8.
 # class Animal
@@ -232,10 +236,15 @@ p Car.wheels
 # end
 
 # bruno = GoodDog.new("brown")       
-# p bruno
+# p bruno #=> <GoodDog:encoding of object id, @name = 'brown, @color = 'brown'>
 
+# What is output and why? What does this demonstrate about `super`?
 
-# # What is output and why? What does this demonstrate about `super`?
+# The output shows that both the `Animal` instance variable name and the GoodDog instance variable `color` are assigned the passed in
+# value of `brown` upon instantiation of the `bruno` GoodDog object.
+
+# This is because by default, `super` passes all arguments up the method lookup chain. If we wanted to avoid this, we could append
+# super with `()`
 
 # 9.
 # class Animal
@@ -252,58 +261,63 @@ p Car.wheels
 
 # bear = Bear.new("black")        
 
+# What is output and why? What does this demonstrate about `super`? 
 
-# # What is output and why? What does this demonstrate about `super`? 
+# This code raises an error, as `super` passes the `color` argument up the method lookup path to `Animal`s `initialize` method which
+# does not accept any arguments. This demonstrates that by default, `super` passes every argument up the chain. To fix this, we
+# could append `super` with () to ensure no arguments are passed.
 
 # 10.
-# module Walkable
-#   def walk
-#     "I'm walking."
-#   end
-# end
+module Walkable
+  def walk
+    "I'm walking."
+  end
+end
 
-# module Swimmable
-#   def swim
-#     "I'm swimming."
-#   end
-# end
+module Swimmable
+  def swim
+    "I'm swimming."
+  end
+end
 
-# module Climbable
-#   def climb
-#     "I'm climbing."
-#   end
-# end
+module Climbable
+  def climb
+    "I'm climbing."
+  end
+end
 
-# module Danceable
-#   def dance
-#     "I'm dancing."
-#   end
-# end
+module Danceable
+  def dance
+    "I'm dancing."
+  end
+end
 
-# class Animal
-#   include Walkable
+class Animal
+  include Walkable
 
-#   def speak
-#     "I'm an animal, and I speak!"
-#   end
-# end
+  def speak
+    "I'm an animal, and I speak!"
+  end
+end
 
-# module GoodAnimals
-#   include Climbable
+module GoodAnimals
+  include Climbable
 
-#   class GoodDog < Animal
-#     include Swimmable
-#     include Danceable
-#   end
+  class GoodDog < Animal
+    include Swimmable
+    include Danceable
+  end
   
-#   class GoodCat < Animal; end
-# end
+  class GoodCat < Animal; end
+end
 
-# good_dog = GoodAnimals::GoodDog.new
-# p good_dog.walk
+good_dog = GoodAnimals::GoodDog.new
+p good_dog.walk
+p GoodAnimals::GoodDog.ancestors
 
+# What is the method lookup path used when invoking `#walk` on `good_dog`?
 
-# # What is the method lookup path used when invoking `#walk` on `good_dog`?
+# GoodDog -> Danceable -> Swimmable -> Animal -> Walkable (found `walk`!)
 
 # 11.
 # class Animal
