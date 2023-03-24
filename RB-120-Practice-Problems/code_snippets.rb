@@ -268,56 +268,55 @@
 # could append `super` with () to ensure no arguments are passed.
 
 # 10.
-module Walkable
-  def walk
-    "I'm walking."
-  end
-end
+# module Walkable
+#   def walk
+#     "I'm walking."
+#   end
+# end
 
-module Swimmable
-  def swim
-    "I'm swimming."
-  end
-end
+# module Swimmable
+#   def swim
+#     "I'm swimming."
+#   end
+# end
 
-module Climbable
-  def climb
-    "I'm climbing."
-  end
-end
+# module Climbable
+#   def climb
+#     "I'm climbing."
+#   end
+# end
 
-module Danceable
-  def dance
-    "I'm dancing."
-  end
-end
+# module Danceable
+#   def dance
+#     "I'm dancing."
+#   end
+# end
 
-class Animal
-  include Walkable
+# class Animal
+#   include Walkable
 
-  def speak
-    "I'm an animal, and I speak!"
-  end
-end
+#   def speak
+#     "I'm an animal, and I speak!"
+#   end
+# end
 
-module GoodAnimals
-  include Climbable
+# module GoodAnimals
+#   include Climbable
 
-  class GoodDog < Animal
-    include Swimmable
-    include Danceable
-  end
+#   class GoodDog < Animal
+#     include Swimmable
+#     include Danceable
+#   end
   
-  class GoodCat < Animal; end
-end
+#   class GoodCat < Animal; end
+# end
 
-good_dog = GoodAnimals::GoodDog.new
-p good_dog.walk
-p GoodAnimals::GoodDog.ancestors
+# good_dog = GoodAnimals::GoodDog.new
+# p good_dog.walk
 
 # What is the method lookup path used when invoking `#walk` on `good_dog`?
 
-# GoodDog -> Danceable -> Swimmable -> Animal -> Walkable (found `walk`!)
+# GoodAnimals::GoodDog -> Danceable -> Swimmable -> Animal -> Walkable (found `walk`!)
 
 # 11.
 # class Animal
@@ -347,8 +346,18 @@ p GoodAnimals::GoodDog.ancestors
 #   feed_animal(animal)
 # end
 
+# What is output and why? How does this code demonstrate polymorphism?
 
-# # What is output and why? How does this code demonstrate polymorphism? 
+# output:
+# "I eat."
+# "I eat plankton."
+# "I eat kibble."
+
+# This code demonstrates polymorphism through inheritance.
+# In this example, the client code doesn't care what each object is, just that they each have an available `eat` method.
+# This example shows polymorphism in which different object types can respond to the same method call by overriding a method inherited
+# from a superclass.
+
 # 12.
 # class Person
 #   attr_accessor :name, :pets
@@ -379,8 +388,16 @@ p GoodAnimals::GoodDog.ancestors
 
 # bob.pets.jump 
 
+# We raise an error in the code above. Why? What do `kitty` and `bud` represent in relation to our `Person` object?  
 
-# # We raise an error in the code above. Why? What do `kitty` and `bud` represent in relation to our `Person` object?  
+# A undefined method error is raised as we are calling `jump` on the `pets` array itself, rather than the pet objects within.
+
+# Kitty and Bud represent collaborator objects to the Person object, as they are stored as state in the `Person` object's
+# instance variable `pets`
+
+# In order to get the desired output, we would need to call `jump` on each objects within the pets array.
+
+# bob.pets.each {|x| x.jump}
 
 # 13.
 # class Animal
@@ -390,7 +407,9 @@ p GoodAnimals::GoodDog.ancestors
 # end
 
 # class Dog < Animal
-#   def initialize(name); end
+#   def initialize(name)
+#     super # Or @name = name, either option fixes the problem.
+#   end
 
 #   def dog_name
 #     "bark! bark! #{@name} bark! bark!"
@@ -400,26 +419,30 @@ p GoodAnimals::GoodDog.ancestors
 # teddy = Dog.new("Teddy")
 # puts teddy.dog_name   
 
+# What is output and why?
 
-# # What is output and why?
+# Output: 'bark! bark!  bark! bark!'
+
+# This is due to the `@name` instance variabel not being initialized, and therfor the reference to @name in `dog_name` referencing `nil`.
+# We can fix this by either intitializing the `@name` instance variable within our dog#intialize method, or by passing in `super` to
+# use the `Animal` class initialize method definition which initiailizes the instance variable.
 
 # 14.
-# class Person
-#   attr_reader :name
+class Person
+  attr_reader :name
 
-#   def initialize(name)
-#     @name = name
-#   end
-# end
+  def initialize(name)
+    @name = name
+  end
+end
 
-# al = Person.new('Alexander')
-# alex = Person.new('Alexander')
-# p al == alex # => true
+al = Person.new('Alexander')
+alex = Person.new('Alexander')
+p al == alex # => true
 
+# In the code above, we want to compare whether the two objects have the same name. `Line 11` currently returns `false`. How could we return `true` on `line 11`? 
 
-# # In the code above, we want to compare whether the two objects have the same name. `Line 11` currently returns `false`. How could we return `true` on `line 11`? 
-
-# # Further, since `al.name == alex.name` returns `true`, does this mean the `String` objects referenced by `al` and `alex`'s `@name` instance variables are the same object? How could we prove our case?
+# Further, since `al.name == alex.name` returns `true`, does this mean the `String` objects referenced by `al` and `alex`'s `@name` instance variables are the same object? How could we prove our case?
 
 
 # 15.
