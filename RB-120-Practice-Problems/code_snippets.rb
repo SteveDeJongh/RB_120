@@ -673,9 +673,52 @@
 # even if defined outside of the method and not passed in as an argument.
 
 # 26.
-# # How do class inheritance and mixing in modules affect instance variable scope? Give an example.
+# How do class inheritance and mixing in modules affect instance variable scope? Give an example.
+
+# Superclass instance variables are accessible providing they are initialized. ex:
+
+# class Parent
+#   def initialize(name)
+#     @name = name
+#   end
+
+# end
+
+# class Kid < Parent
+#   def name
+#     puts "#{@name}"
+#   end
+# end
+
+# ted = Kid.new('ted')
+# ted.name # 'ted' # using the Parent instance variable @name
+
+# # When mixing in modules, as long as the method is called before trying to access the instance variable, the code will behave as expected.
+
+# module Swimmable
+#   def good_to_swim
+#     @can_swim = true
+#   end
+# end
+
+# class Dog
+#   include Swimmable
+
+#   def swim
+#     "Swimming!" if @can_swim
+#   end
+# end
+
+# ted = Dog.new
+# p ted.swim # nil
+# ted.good_to_swim # method call required to initialize @can_swim instance variable.
+# p ted.swim #=> Swimming!
+
 # 27.
-# # How does encapsulation relate to the public interface of a class?
+# How does encapsulation relate to the public interface of a class?
+
+# Encapsulation lets us hide the internal representation of an object from teh outside and only expose the methods and properties
+# that users of the object need. We used method access control to expose these properties and methods through the public internface of a class.
 
 # 28.
 # class GoodDog
