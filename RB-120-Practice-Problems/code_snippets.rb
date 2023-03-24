@@ -428,22 +428,39 @@
 # use the `Animal` class initialize method definition which initiailizes the instance variable.
 
 # 14.
-class Person
-  attr_reader :name
+# class Person
+#   attr_reader :name
 
-  def initialize(name)
-    @name = name
-  end
-end
+#   def initialize(name)
+#     @name = name
+#   end
 
-al = Person.new('Alexander')
-alex = Person.new('Alexander')
-p al == alex # => true
+#   def ==(other)
+#     self.name == other.name
+#   end
+# end
+
+# al = Person.new('Alexander')
+# alex = Person.new('Alexander')
+# p al == alex # => true
 
 # In the code above, we want to compare whether the two objects have the same name. `Line 11` currently returns `false`. How could we return `true` on `line 11`? 
 
+# In order for `al == alex` to return true, we need to define a `==` method in the `Person` class. By default, the `==` compares each
+# objects objectID, which would be different.
+
+# def ==(other)
+#   self.name == other.name
+# end
+
 # Further, since `al.name == alex.name` returns `true`, does this mean the `String` objects referenced by `al` and `alex`'s `@name` instance variables are the same object? How could we prove our case?
 
+# The two string objects stored as instance variables are different objects. We could call object_id on the instance variables themselves.
+
+# p al.name #=> "Alexander"
+# p al.name.object_id #=> 60
+# p alex.name #=> "Alexander"
+# p alex.name.object_id #=> 80
 
 # 15.
 # class Person
@@ -459,18 +476,36 @@ p al == alex # => true
 # end
 
 # bob = Person.new('Bob')
-# puts bob.name
-# puts bob
-# puts bob.name
+# puts bob.name #=> 'Bob'
+# puts bob #=> "My name is BOB." # We've overridden the to_s method, and used a mutating `upcase!` method call on the instance variable @name.
+# puts bob.name #=> "BOB"
 
-
-# # What is output on `lines 14, 15, and 16` and why?
+# What is output on `lines 14, 15, and 16` and why?
 
 #  16.
-# # Why is it generally safer to invoke a setter method (if available) vs. referencing the instance variable directly when trying to set an instance variable within the class? Give an example.
+# Why is it generally safer to invoke a setter method (if available) vs. referencing the instance variable directly when trying to
+# set an instance variable within the class? Give an example.
+
+# ?????????????????
 
 # 17.
-# # Give an example of when it would make sense to manually write a custom getter method vs. using `attr_reader`.
+# Give an example of when it would make sense to manually write a custom getter method vs. using `attr_reader`.
+
+# It would make sense to write a custom getter method vs an attr_reader method when we want to control how the information is going to be
+# displayed, or to control how much of the raw data is exposed.
+
+# Supose we have a bank account number which we only want to display the last 4 digits everytime it's referened.
+
+# We could write something like: 'xxxx-xxxx-' + @bankaccount.to_s.split('')[-4..-1].join everytime we wanted to display the bank number.
+
+# If we instead have a custom getter method, we could simply call it.
+
+# def bankaccount
+#   'xxxx-xxxx-' + @bankaccount.to_s.split('')[-4..-1].join
+# end
+
+# This would allow us to make easy changes to how we want the information displayed throughout the program.
+
 # 18. 
 # class Shape
 #   @@sides = nil
@@ -496,21 +531,123 @@ p al == alex # => true
 #   end
 # end
 
+# What can executing `Triangle.sides` return? What can executing `Triangle.new.sides` return? What does this demonstrate about class variables?
 
-# # What can executing `Triangle.sides` return? What can executing `Triangle.new.sides` return? What does this demonstrate about class variables?
+# p Triangle.sides #=> `nil`
+# p Triangle.new.sides #=> 3
+# p Quadrilateral.sides #=> 3
+# p Quadrilateral.new.sides #=> 4
+
+# This code example demonstrates why we should avoid using class variables in the context of inheritance. As there exists only 1 copy of the
+# class variable, any changes to it down the line will affect the single copy.
+
+# Once a Triangle, or Quadrilateral object is instantiated, the `@@sides` class variable will be changed to either 3 or 4.
 
 # 19.
-# # What is the `attr_accessor` method, and why wouldn’t we want to just add `attr_accessor` methods for every instance variable in our class? Give an example.
+# What is the `attr_accessor` method, and why wouldn’t we want to just add `attr_accessor` methods for every instance variable in our class? Give an example.
+
+# The `attr_accesssor` method is the method that creates getter and setter method for the instance variables listed after as symbols.
+# We maybe not want to add attr_accessor methods for every instance variable as we may have some instance variables that we don't want to change.
+
+# For example:
+
+# class Account
+#   attr_accessor :name
+
+#   def initialize(name)
+#     @name = name
+#     @date_created = Time.new
+#   end
+# end
+
+# ron = Account.new('steve')
+# p ron
+# p ron.name
+# # ron.date_created = "now!?" # Raises an error as we don't have accessor methods for @date_created
+
 # 20.
-# # What is the difference between states and behaviors?
+# What is the difference between states and behaviors?
+
+# The difference between state and behaviors is that state is tracked at the object level via instance variables unique to each object,
+# while behaviors are instance methods available to all instances of the class.
+
 # 21. 
-# # What is the difference between instance methods and class methods?
+# What is the difference between instance methods and class methods?
+
+# Instance methods are methods which are accessible to objects of that class. Class methods are only able to be called on the class itself,
+# often exposing data about the class. We do not need to instantiate any objects of the class to call a class method.
+
 # 22.
-# # What are collaborator objects, and what is the purpose of using them in OOP? Give an example of how we would work with one.
+# What are collaborator objects, and what is the purpose of using them in OOP? Give an example of how we would work with one.
+
+# Collaborator objects are objects which are stored as state in a seperate object.
+
+# An example of this would be a human and their pets.
+
+# class Human
+#   attr_reader :pets
+
+#   def initialize(name)
+#     @name = name
+#     @pets = []
+#   end
+
+#   def add_pet(x)
+#     self.pets << x
+#   end
+# end
+
+# class Pet
+#   def initialize(name, type)
+#     @name = name
+#     @type = type
+#   end
+# end
+
+# steve = Human.new('Steve')
+# p steve.pets #=> empty array
+# gryff = Pet.new('Gryff', 'Dog')
+# steve.add_pet(gryff)
+# p steve.pets #=> [<pet:encoding, @name = 'Gryff', @type = 'Dog'>]
+
 # 23.
-# # How and why would we implement a fake operator in a custom class? Give an example.
+# How and why would we implement a fake operator in a custom class? Give an example.
+
+# class Human
+#   def initialize(name)
+#     @name = name
+#     @pets = []
+#   end
+
+#   def <<(thing)
+#     @pets << thing
+#   end
+# end
+
+# steve = Human.new('steve')
+# steve << 'gryff'
+# p steve
+
 # 24.
-# # What are the use cases for `self` in Ruby, and how does `self` change based on the scope it is used in? Provide examples.
+# What are the use cases for `self` in Ruby, and how does `self` change based on the scope it is used in? Provide examples.
+
+# `self` can be used in a few different ways. `self` before a method name in a class definition indicates the method is a class method.
+# Otherwise, if `self` is used inside of a method definition, it references the instance that called the method, the calling object.
+
+# class Human
+#   attr_accessor :name
+
+#   def self.what_am_i? # Class method
+#     self #=> "Human"
+#   end
+
+#   def change_name(name)
+#     self.name = name # calls the `name` writer method
+#   end
+# end
+
+# p Human.what_am_i?
+
 # 25.
 # class Person
 #   def initialize(n)
@@ -530,8 +667,10 @@ p al == alex # => true
 
 # p bob.get_name # => "bob"
 
+# What does the above code demonstrate about how instance variables are scoped?
 
-#  # What does the above code demonstrate about how instance variables are scoped?
+# The above code demonstrates that instance variables are scoped at the object level. Instance variables are accessible to instance methods
+# even if defined outside of the method and not passed in as an argument.
 
 # 26.
 # # How do class inheritance and mixing in modules affect instance variable scope? Give an example.
