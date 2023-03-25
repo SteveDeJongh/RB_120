@@ -1008,17 +1008,21 @@ require 'pry'
 # This shows that all classes inheirt the `==` from the `object` class, and that the default `==` implementation is the same as `equal?`
 
 # 39.
-class Thing
-end
+# class Thing
+# end
 
-class AnotherThing < Thing
-end
+# class AnotherThing < Thing
+# end
 
-class SomethingElse < AnotherThing
-end
+# class SomethingElse < AnotherThing
+# end
 
 # Describe the inheritance structure in the code above, and identify all the superclasses.
 
+# `SomethingElse` subclasses and inherits from it's superclass `AnotherThing`
+# `AnotherThing` subclasses and hinerits from it's superclass `Thing`
+
+# The superclasses are `Thing` and `AnotherThing`
 
 # 40.
 # module Flight
@@ -1045,10 +1049,14 @@ end
 # end
 
 # pingu = Penguin.new
+# p pingu.class.ancestors
 # pingu.fly
 
-
 # What is the method lookup path that Ruby will use as a result of the call to the `fly` method? Explain how we can verify this.
+
+# The method lookup path for the call to `fly` on pingu is Penguin < Migratory < Aquatic < Bird < Animal < Object ...
+# The fly method will not be found in `Flight` as it's not in the method lookup path for objects of the Penguin class.
+
 # 41.
 # class Animal
 #   def initialize(name)
@@ -1071,10 +1079,13 @@ end
 # end
 
 # daisy = Cow.new("Daisy")
-# daisy.speak
+# daisy.speak #=> "Daisy says mooooooooooo!"
 
+# What does this code output and why?
 
-# # What does this code output and why?
+# The call for daisy speak reached the animal class method, with then calls `puts` on `sound`, the sound method called by puts is actually
+# the `sound` method defined in `Cow`, wich then calls `super` going to the `sound` method in `animal` then adding the return value of that
+# call with "moooooooooo!". Everytime a new method is invoked, the method lookup path starts once again from the calling object.
 
 # 42.
 # class Cat
@@ -1095,8 +1106,11 @@ end
 # max = Cat.new("Max", "tabby")
 # molly = Cat.new("Molly", "gray")
 
+# Do `molly` and `max` have the same states and behaviors in the code above? Explain why or why not, and what this 
+# demonstrates about objects in Ruby.
 
-# # Do `molly` and `max` have the same states and behaviors in the code above? Explain why or why not, and what this demonstrates about objects in Ruby.
+# Both `Cat` objects would contain different values in their instance variables containing state, but have access to the same behaviors.
+# This demonstrates that instance variables are scoped at the object level, and each object will contain unique states, while sharing behaviors.
 
 # 43.
 # class Student
@@ -1107,34 +1121,46 @@ end
 #     @grade = nil
 #   end
   
-#   def change_grade(new_grade)
-#     grade = new_grade
+#   # def change_grade(new_grade)
+#   #   grade = new_grade
+#   # end
+
+#   def change_grade(new_grade) # Fixed change_grade method.
+#     self.grade = new_grade
 #   end
 # end
 
 # priya = Student.new("Priya")
 # priya.change_grade('A')
-# priya.grade 
+# p priya.grade 
 
+# In the above code snippet, we want to return `”A”`. What is actually returned and why? How could we adjust the
+# code to produce the desired result?
 
-# # In the above code snippet, we want to return `”A”`. What is actually returned and why? How could we adjust the code to produce the desired result?
-# 44.
-# class MeMyselfAndI
-#   self
+# Within the `change_grade` method definiton, instead of changing the instance variable @grade, we are initializing a new local variable
+# to the method parameter `new_grade`. To change this, we can either reference the instance variable @grade itself, or use the available
+# setter method by calling `self` before grade.
 
-#   def self.me
-#     self
-#   end
-
-#   def myself
-#     self
-#   end
+# def change_grade(new_grade)
+#   self.grade = new_grade
 # end
 
-# i = MeMyselfAndI.new
+# 44.
+class MeMyselfAndI
+  self
 
+  def self.me
+    self
+  end
 
-# # What does each `self` refer to in the above code snippet?
+  def myself
+    self
+  end
+end
+
+i = MeMyselfAndI.new
+
+# What does each `self` refer to in the above code snippet?
 
 # 45.
 # class Student
