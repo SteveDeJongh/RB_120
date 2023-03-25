@@ -642,7 +642,7 @@ require 'pry'
 #   end
 
 #   def change_name(name)
-#     self.name = name # calls the `name` writer method
+#     self.name = name # calls the `name` setter method
 #   end
 # end
 
@@ -793,10 +793,134 @@ require 'pry'
 # 32.
 # What is polymorphism and how can we implement polymorphism in Ruby? Provide examples.
 
+# Polymorhpism is the ability for different types of data to respond to a common interface. This is most commonly acheived through
+# class inheritance or duck-typing.
 
+# class Animal
+#   def move
+#   end
+# end
+
+# class Fish < Animal
+#   def move
+#     puts "swim"
+#   end
+# end
+
+# class Cat < Animal
+#   def move
+#     puts "walk"
+#   end
+# end
+
+# # Sponges and Corals don't have a separate move method - they don't move
+# class Sponge < Animal; end
+# class Coral < Animal; end
+
+# animals = [Fish.new, Cat.new, Sponge.new, Coral.new]
+# animals.each { |animal| animal.move }
+
+# The avove is an exmaple of Polymorhpism through inheritance. As Sponge and Coral classes don't move, but inherit a move method from Animal,
+# the `move` method can be called on all object in the animals array, however their response to the same method invocation will be different.
+# Ex2 
+# class Food
+#   def bake
+#   end
+# end
+
+# class Breaddough < Food
+#   def bake
+#     puts "I'm rising!"
+#   end
+# end
+
+# class Roast < Food
+#   def bake
+#     puts "I'm roasting!"
+#   end
+# end
+
+# class Crackers < Food; end
+# class Sugar < Food; end
+
+# foods = [Breaddough.new, Roast.new, Crackers.new, Sugar.new]
+# foods.each {|food| food.bake}
+
+# Through Ducktyping:
+
+# class Concert
+#   attr_reader :songs, :lights, :stage
+
+#   def run(personel)
+#     personel.each do |person|
+#       person.perform_concert(self)
+#     end
+#   end
+# end
+
+# class Musician
+#   def perform_concert(concert)
+#       play_music(concert.songs)
+#   end
+
+#   def play_music(songs)
+#     # implementation...
+#   end
+# end
+
+# class Security
+#   def perform_concert(concert)
+#     secure_stage(conert.stage)
+#   end
+
+#   def secure_stage(concert)
+#     #implementation...
+#   end
+# end
+
+# class StageHands
+#   def perform_concert(concert)
+#     adjust_lights(concert.lights)
+#   end
+
+#   def adjust_lights(lights)
+#     #implementation...
+#   end
+# end
+
+# This is an example of duck-typing. Each personel has a method called `perform_concert`. Though the call of each perform concert for each
+# personel is very different depending on the implementation of the method within each class.
 
 # 33.
-# # What is encapsulation, and why is it important in Ruby? Give an example.
+# What is encapsulation, and why is it important in Ruby? Give an example.
+
+# Encapsulation lets us hide the internal representation of an object from the otuside, and only expose methods and properties that users of
+# the object need.
+
+# class Bike
+#   attr_reader :modelname
+
+#   def initialize(model)
+#     @modelname = model
+#   end
+
+#   def change_model(model)
+#     self.modelname = model
+#   end
+
+#   def model
+#     "This bike a #{modelname}."
+#   end
+
+#   private
+#     attr_writer :modelname
+# end
+
+# trek = Bike.new('Trek')
+# trek.change_model('Specialized')
+# puts trek.model #=> "This bike is a Specialized."
+# trek.modelname = "Trek" # Error, private method `modelname=` called.
+
 # 34.
 # module Walkable
 #   def walk
@@ -837,20 +961,36 @@ require 'pry'
 # end
 
 # mike = Person.new("Mike")
-# p mike.walk
+# p mike.walk #=> "Mike stroll forward"
 
 # kitty = Cat.new("Kitty")
-# p kitty.walk
+# p kitty.walk #=> "Kitty saunters forward"
 
+# What is returned/output in the code? Why did it make more sense to use a module as a mixin vs. defining a parent class and using class inheritance?
 
-# # What is returned/output in the code? Why did it make more sense to use a module as a mixin vs. defining a parent class and using class inheritance?
+# In this case, it makes more sense to mix in a walkable module rather than inherit the behavior from a parent class as ther is no logical
+# `is_a` relationship for both `Person` and `Cat`, while there is a `has_a` ability to walk relationship for both classes.
+
 # 35.
-# # What is Object Oriented Programming, and why was it created? What are the benefits of OOP, and examples of problems it solves?
+# What is Object Oriented Programming, and why was it created? What are the benefits of OOP, and examples of problems it solves?
+
+# OOP is a programming paradigm that was created to deal with the growing complexities of larger program. It enables programmers
+# to encapsulate sections of code, partitioning it off from the rest of the code base preventing the possibility of ripple effects
+# down the line after a small change.
 
 # 36.
-# # What is the relationship between classes and objects in Ruby?
+# What is the relationship between classes and objects in Ruby?
+
+# Classes can be thought of the molds which create objects. Objects are created from Classes, and are instantiated with the instance variables
+# containing each objects state, and instance methods of the class containing their behavior.
+
 # 37.
-# # When should we use class inheritance vs. interface inheritance?
+# When should we use class inheritance vs. interface inheritance?
+
+# Class inheritance typically shares a "is_a" relationship and most often used when the subclass `is a` kind of the superclass.
+# Interface inheritance is used when the class "has_a" ability to perform whatever behavior is defined in the module, but that behavior
+# does not necessarily work with the current inheritance structure.
+
 # 38.
 # class Cat
 # end
@@ -859,20 +999,27 @@ require 'pry'
 # ginger = Cat.new
 # paws = Cat.new
 
+# If we use `==` to compare the individual `Cat` objects in the code above, will the return value be `true`? Why or why not? What
+# does this demonstrate about classes and objects in Ruby, as well as the `==` method?
 
-# # If we use `==` to compare the individual `Cat` objects in the code above, will the return value be `true`? Why or why not? What does this demonstrate about classes and objects in Ruby, as well as the `==` method?
+# p whiskers == ginger #=> False
+
+# The return value will be false, as the default implementation of `==` comparaes each objects unique object_id.
+# This shows that all classes inheirt the `==` from the `object` class, and that the default `==` implementation is the same as `equal?`
+
 # 39.
-# class Thing
-# end
+class Thing
+end
 
-# class AnotherThing < Thing
-# end
+class AnotherThing < Thing
+end
 
-# class SomethingElse < AnotherThing
-# end
+class SomethingElse < AnotherThing
+end
+
+# Describe the inheritance structure in the code above, and identify all the superclasses.
 
 
-# # Describe the inheritance structure in the code above, and identify all the superclasses.
 # 40.
 # module Flight
 #   def fly; end
