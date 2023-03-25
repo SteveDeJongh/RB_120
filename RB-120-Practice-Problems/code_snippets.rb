@@ -1,5 +1,5 @@
 ########## RB 129 Practice Problems #######
-
+require 'pry'
 # 1.
 # class Person
 #   attr_reader :name
@@ -717,8 +717,8 @@
 # 27.
 # How does encapsulation relate to the public interface of a class?
 
-# Encapsulation lets us hide the internal representation of an object from teh outside and only expose the methods and properties
-# that users of the object need. We used method access control to expose these properties and methods through the public internface of a class.
+# Encapsulation lets us hide the internal representation of an object from the outside and only expose the methods and properties
+# that users of the object need. We used method access control to expose these properties and methods through the public interface of a class.
 
 # 28.
 # class GoodDog
@@ -733,12 +733,14 @@
 # end
 
 # sparky = GoodDog.new("Sparky", 4)
-# puts sparky
+# puts sparky #=> <Gooddog:encoding of object id>
 
+# What is output and why? How could we output a message of our choice instead?
 
-# # What is output and why? How could we output a message of our choice instead?
+# This is because we are using the default implementation of `to_s`, which does not call `inspect`.
+# If we wanted the code above to output a message of our choice, we could define our own `to_s` method to override the default implementation.
 
-# # How is the output above different than the output of the code below, and why?
+# How is the output above different than the output of the code below, and why?
 
 # class GoodDog
 #   DOG_YEARS = 7
@@ -752,17 +754,47 @@
 # end
 
 # sparky = GoodDog.new("Sparky", 4)
-# p sparky
+# p sparky #=> <GoodDog:encoding of object ID @age = 28, @name = 'Sparky'>
 
+# This is because we are now calling the `p` method, wich instead of caling `to_s` calls `inspect` instead.
 
 # 29.
-# # When does accidental method overriding occur, and why? Give an example.
+# When does accidental method overriding occur, and why? Give an example.
+
+# accidental method overriding occurs when we name our class defined method the same as an inherited method we were not meaning to overrride.
+# This often occurs with methods defined in the `object` class, as all classes inherit from it. A commonly overrriden method is `to_s`,
+# while the `send` method (among others) can be accidentaly overrriden.
+
 # 30.
-# # How is Method Access Control implemented in Ruby? Provide examples of when we would use public, protected, and private access modifiers.
+# How is Method Access Control implemented in Ruby? Provide examples of when we would use public, protected, and private access modifiers.
+
+# Method access control is impltemented using the access modifiers `public`, `private`, and `protected` keywords.
+
+# Public is the default access level for mehods defined in a class. The method is available to anyone who knows either the class name or
+# objects name. The methods are available for the rest of the program to use and comprise the class's interface.
+
+# Private methods are methods which can only be called from within the class definiton. Anything defined below the `private` method call
+# in a class private unless another access modifier method is called. We could use private methods when we want to hide functionality
+# of certain methods, and only have them implemented in certain ways using other public methods.
+
+# Protected methods are an inbetween approach in that they cannot be invoked outside of the class, but are available for use between instances
+# of the class. This is most commonly used by comparison operators when gaining access to the variable we wish to compare.
+
 # 31.
-# # Describe the distinction between modules and classes.
+# Describe the distinction between modules and classes.
+
+# Modules can be thought of as containers of behaviors. They differ from classes as they can not instantiate any objects. Modules
+# typically share a 'has_a' relationship to the classes which they are included in. 
+
+# Classes are molds for the bahviors and states of instantiated objects. They contain the methods and behaviors the objects can do,
+# along with outlining the instance variables used to track each unique objects state. Classes have a "is_a" relationship with the objects
+# which are created from the class. Classes can only subclass from 1 superclass, however they can mixin in as many modules as they'd like.
+
 # 32.
-# # What is polymorphism and how can we implement polymorphism in Ruby? Provide examples.
+# What is polymorphism and how can we implement polymorphism in Ruby? Provide examples.
+
+
+
 # 33.
 # # What is encapsulation, and why is it important in Ruby? Give an example.
 # 34.
