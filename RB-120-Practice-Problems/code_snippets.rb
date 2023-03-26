@@ -1146,21 +1146,21 @@ require 'pry'
 # end
 
 # 44.
-class MeMyselfAndI
-  self
+# class MeMyselfAndI
+#   self # self refer to the classs MeMyselfAndI
 
-  def self.me
-    self
-  end
+#   def self.me # Self referes to the class MeMyselfAndI
+#     self
+#   end
 
-  def myself
-    self
-  end
-end
+#   def myself
+#     self # Self refers to the calling object.
+#   end
+# end
 
-i = MeMyselfAndI.new
+# i = MeMyselfAndI.new
 
-# What does each `self` refer to in the above code snippet?
+# # What does each `self` refer to in the above code snippet?
 
 # 45.
 # class Student
@@ -1174,8 +1174,13 @@ i = MeMyselfAndI.new
 # ade = Student.new('Adewale')
 # p ade # => #<Student:0x00000002a88ef8 @grade=nil, @name="Adewale">
 
+# Running the following code will not produce the output shown on the last line. Why not? What would we need to change, 
+# and what does this demonstrate about instance variables?
 
-# # Running the following code will not produce the output shown on the last line. Why not? What would we need to change, and what does this demonstrate about instance variables?
+# The code actually outputs: <Student:encoding of object ID, @name="Adewale">
+# This is because although the method parameter "grade" has a default value, the instance variable grade is never initalized to that default
+# value.
+
 # 46.
 # class Character
 #   attr_accessor :name
@@ -1185,7 +1190,7 @@ i = MeMyselfAndI.new
 #   end
 
 #   def speak
-#     "#{@name} is speaking."
+#     "#{@name} is speaking." # Change `@name` to `name`
 #   end
 # end
 
@@ -1196,11 +1201,15 @@ i = MeMyselfAndI.new
 # end
 
 # sir_gallant = Knight.new("Gallant")
-# p sir_gallant.name 
-# p sir_gallant.speak 
+# p sir_gallant.name #=> "Sir Gallant"
+# p sir_gallant.speak #=> "Gallant is speaking."
 
+# What is output and returned, and why? What would we need to change so that the last line outputs `”Sir Gallant is speaking.”`? 
 
-# # What is output and returned, and why? What would we need to change so that the last line outputs `”Sir Gallant is speaking.”`? 
+# This is because on line 1193, we are referencing the local variable @name, and not the name method. As a method call will always first
+# reference the calling object, the call to `name` will use the `Knight` `name` method and not the `Character` name accessor method.
+# The `name` method in `Knight` first prepends "Sir " to the return value of the call to `super`, using the Character class name accessor method.
+# This returns Sir Gallant, to teh call to `name` on 1193, which then returns the full "Sir Gallant is speaking." 
 
 # 47. 
 # class FarmAnimal
@@ -1227,12 +1236,23 @@ i = MeMyselfAndI.new
 #   end
 # end
 
-# p Sheep.new.speak
-# p Lamb.new.speak
-# p Cow.new.speak 
+# p Sheep.new.speak #=> "<Sheep:encoding id> says baa!"
+# p Lamb.new.speak #=> "<Lamb:encoding id> says baa!baaaaaaa!"
+# p Cow.new.speak #=> "<Cow:encoding id> says moooooooo!"
 
+# What is output and why? 
 
-# # What is output and why? 
+# <Sheep:object id> is return due to the `self` call in the `speak` method in `FarmAnimal` class which all animals eventually use. As the 
+# call to `self` is used in string interpolation, `puts` is automatically called which returns the object class and an enocoding of the
+# objects ID.
+
+# The implementation of the `speak` method for both Sheep and Cow are the same. In both method defitions, they first call `super` to pass
+# program flow to the superclass `speak` method, and combine the return value with "baa!" or "mooooooo!" respectively.
+
+# For `Lamb`, there's one extra step. As the `Lamb` class first inherits from `Sheep`, the first call to `super` in speak in the Lamb class
+# passes program flow to `Sheep` which then passes to `Farmanimal`. The return from FarmAnimal Speek is "<Lamb:object says ", which then
+# gets appended with "baaa!" from the sheep class, which then gets appended by "baaaaaaaaa!" from the Lamb class.
+
 # 48.
 # class Person
 #   def initialize(name)
@@ -1250,8 +1270,11 @@ i = MeMyselfAndI.new
 # sara = Person.new("Sara")
 # fluffy = Cat.new("Fluffy", sara)
 
+# What are the collaborator objects in the above code snippet, and what makes them collaborator objects?
 
-# # What are the collaborator objects in the above code snippet, and what makes them collaborator objects?
+# The collaborator objects in this code example is the Person object `Sara`. This is because that object is stored as state in the 'fluffy'
+# cat object as an @owner.
+
 # 49.
 # number = 42
 
@@ -1261,25 +1284,33 @@ i = MeMyselfAndI.new
 # when 40..49     then 'third'
 # end
 
-
 # # What methods does this `case` statement use to determine which `when` clause is executed?
 
+# The case statemend uses the `integer#===` and 'range#===' methods.
+
 # 50.
-# class Person
-#   TITLES = ['Mr', 'Mrs', 'Ms', 'Dr']
+class Person
+  TITLES = ['Mr', 'Mrs', 'Ms', 'Dr']
 
-#   @@total_people = 0
+  @@total_people = 0
 
-#   def initialize(name)
-#     @name = name
-#   end
+  def initialize(name)
+    @name = name
+  end
 
-#   def age
-#     @age
-#   end
-# end
+  def age
+    @age
+  end
+end
 
-# # What are the scopes of each of the different variables in the above code?
+# What are the scopes of each of the different variables in the above code?
+
+# TITLES has lexical scope, meaning that the position of the code determines where it is available.
+
+# @@total_people is a class variable scoped at the object level. All instances of the class share this one copy of the variable.
+
+# @name and @age are instance variables and scoped at the object level.
+
 # 51.
 # # The following is a short description of an application that lets a customer place an order for a meal:
 
