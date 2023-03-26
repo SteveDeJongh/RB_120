@@ -1289,38 +1289,122 @@ require 'pry'
 # The case statemend uses the `integer#===` and 'range#===' methods.
 
 # 50.
-class Person
-  TITLES = ['Mr', 'Mrs', 'Ms', 'Dr']
+# class Person
+#   TITLES = ['Mr', 'Mrs', 'Ms', 'Dr']
 
-  @@total_people = 0
+#   @@total_people = 0
 
-  def initialize(name)
-    @name = name
-  end
+#   def initialize(name)
+#     @name = name
+#   end
 
-  def age
-    @age
-  end
-end
+#   def age
+#     @age
+#   end
+# end
 
 # What are the scopes of each of the different variables in the above code?
 
 # TITLES has lexical scope, meaning that the position of the code determines where it is available.
-
 # @@total_people is a class variable scoped at the object level. All instances of the class share this one copy of the variable.
-
 # @name and @age are instance variables and scoped at the object level.
 
 # 51.
-# # The following is a short description of an application that lets a customer place an order for a meal:
+# The following is a short description of an application that lets a customer place an order for a meal:
 
-# # - A meal always has three meal items: a burger, a side, and drink.
-# # - For each meal item, the customer must choose an option.
-# # - The application must compute the total cost of the order.
+# - A meal always has three meal items: a burger, a side, and drink.
+# - For each meal item, the customer must choose an option.
+# - The application must compute the total cost of the order.
 
-# # 1. Identify the nouns and verbs we need in order to model our classes and methods.
-# # 2. Create an outline in code (a spike) of the structure of this application.
-# # 3. Place methods in the appropriate classes to correspond with various verbs.
+# 1. Identify the nouns and verbs we need in order to model our classes and methods.
+
+# Nouns: customer, order, meal item, burger, side, drink, 
+# Verbs: Place, Choose option, compute total cost,
+
+# 2. Create an outline in code (a spike) of the structure of this application.
+# 3. Place methods in the appropriate classes to correspond with various verbs.
+
+# class Customer
+#   attr_accessor :order
+
+#   def place_order
+#     @order = Order.new
+#   end
+# end
+
+# class Order
+#   def initialize
+#     @burger = Burger.new
+#     @side = Side.new
+#     @drink = Drink.new
+#   end
+
+#   def meal
+#     [@burger, @side, @drink]
+#   end
+
+#   def to_s
+#     meal.map(&:to_s).join(', ')
+#   end
+
+#   def total
+#     total_cost = @burger.cost + @side.cost + @drink.cost
+#     format("$%.2f", total_cost) # #format formats the cost to two decimal places
+#   end
+# end
+
+# class MealItem
+#   def initialize
+#     @option = choose_option
+#   end
+
+#   def choose_option
+#     puts "Please choose #{self.class} option:"
+#     puts "Pick 1 2 3 or 4" #item_options
+#     gets.chomp 
+#   end
+
+#   def to_s
+#     self.class::OPTIONS[@option][:name]
+#   end
+
+#   def cost
+#     self.class::OPTIONS[@option][:cost]
+#   end
+# end
+
+# class Burger < MealItem
+#   OPTIONS = {
+#     '1' => { name: 'LS Burger', cost: 3.00 },
+#     '2' => { name: 'LS Cheeseburger', cost: 3.50 },
+#     '3' => { name: 'LS Chicken Burger', cost: 4.50 },
+#     '4' => { name: 'LS Double Deluxe Burger', cost: 6.00 }
+#   }
+# end
+
+# class Side < MealItem
+#   OPTIONS = {
+#     '1' => { name: 'Fries', cost: 0.99 },
+#     '2' => { name: 'Onion Rings', cost: 1.50 }
+#   }
+# end
+
+# class Drink < MealItem
+#   OPTIONS = {
+#     '1' => { name: 'Cola', cost: 1.50 },
+#     '2' => { name: 'Lemonade', cost: 1.50 },
+#     '3' => { name: 'Vanilla Shake', cost: 2.00 },
+#     '4' => { name: 'Chocolate Shake', cost: 2.00 },
+#     '5' => { name: 'Strawberry Shake', cost: 2.00 }
+#   }
+# end
+
+# steve = Customer.new
+
+# steve.place_order
+
+# puts steve.order
+# puts steve.order.total
 
 # 52. 
 # class Cat
@@ -1336,8 +1420,12 @@ end
 #   end
 # end
 
+# In the `make_one_year_older` method we have used `self`. What is another way we could write this method so 
+# we don't have to use the `self` prefix? Which use case would be preferred according to best practices in Ruby, and why?
 
-# # In the `make_one_year_older` method we have used `self`. What is another way we could write this method so we don't have to use the `self` prefix? Which use case would be preferred according to best practices in Ruby, and why?
+# We could instead reference the instance variable directly by doing `@age +=1`, however it is generally better practice to use
+# setter methods. Using setter methods allows for more control over the raw data and how it may be displayed.
+
 # 53.
 # module Drivable
 #   def self.drive
@@ -1349,16 +1437,35 @@ end
 # end
 
 # bobs_car = Car.new
-# bobs_car.drive
+# bobs_car.drive # Undefined method "drive" for <car...>
 
+# What is output and why? What does this demonstrate about how methods need to be defined in modules, and why?
 
-# # What is output and why? What does this demonstrate about how methods need to be defined in modules, and why?
+# An error is output as Module#drive is defined as if it were a class method. This code demonstrates that methods in modules
+# are to be defined in the same manner as in classes. Think of methods being defined in a modules as the same, with respect to the method
+# lookup chain, as methods defined within the class.
+
 # 54.
 # class House
+#   # include Comparable (option 1)
 #   attr_reader :price
 
 #   def initialize(price)
 #     @price = price
+#   end
+
+#   # option 1:
+#   # def <=>(other)
+#   #   price <=> other.price
+#   # end
+
+#   #option 2:
+#   def >(other)
+#     price > other.price
+#   end
+
+#   def <(other)
+#     price < other.price
 #   end
 # end
 
@@ -1367,5 +1474,8 @@ end
 # puts "Home 1 is cheaper" if home1 < home2 # => Home 1 is cheaper
 # puts "Home 2 is more expensive" if home2 > home1 # => Home 2 is more expensive
 
+# What module/method could we add to the above code snippet to output the desired output on the last 2 lines, and why?
 
-# # What module/method could we add to the above code snippet to output the desired output on the last 2 lines, and why?
+# We could use the `comparable` module and define a `<=>` method to compare prices.
+
+# Alternatively, we could dfeine the `<` and `>` method seperately, with a method definition comparing each objects price instance variables.
