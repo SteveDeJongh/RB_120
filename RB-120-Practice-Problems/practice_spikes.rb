@@ -68,8 +68,6 @@ end
 
 p Referee.new.whistle #=> Whistling!
 
-=end
-
 #2) 
 # Preschool (by Natalie Thompson) ~ 10 minutes
 
@@ -156,3 +154,60 @@ class Children < Preschool
     "playing!"
   end
 end
+
+# 3)
+
+### Dental Office Alumni (by Rona Hsu) 8 minutes.
+
+# There's a dental office called Dental People Inc.  Within this office, there's 2 oral surgeons, 2 orthodontists, 1 general dentist.
+# Both general dentists and oral surgeons can pull teeth. Orthodontists cannot pull teeth.  Orthodontists straighten teeth.
+# All of these aforementioned specialties are dentists. All dentists graduated from dental school.  Oral surgeons place implants.
+# General dentists fill teeth
+
+Nouns: Dental office, oral surgeon, orthodontists, general dentist. dentists, dental school
+Verbs: pull teeth, straighten teeth, place implants, fill teeth
+
+module PullTeethable
+  def pull_teeth
+    "Pulling the tooth!"
+  end
+end
+
+class DentalOffice
+  def initialize
+    @staff = []
+    2.times { @staff << OralSurgeon.new}
+    2.times { @staff << Orthodonsist.new}
+    1.times { @staff << GeneralDentist.new}
+  end
+end
+
+class Dentist
+  def initialize
+    @dentalschool = true
+  end
+end
+
+class OralSurgeron < Dentist
+  include PullTeethable
+
+  def place_implant
+    "Get in there implant!"
+  end
+end
+
+class Orthodonsist < Dentist
+  def straighten_teeth
+    "Straightening the tooth!"
+  end
+end
+
+class GeneralDentist < Dentist
+  include PullTeethable
+
+  def fill_teeth
+    "Filling da tooth!"
+  end
+end
+
+=end
