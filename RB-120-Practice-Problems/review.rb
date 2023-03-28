@@ -7,23 +7,22 @@
 # Explain concepts with precision while writing out code examples.
 
 # Specific Topics of Interest
-# Classes and objects
-# Use attr_* to create setter and getter methods
-# How to call setters and getters
-# Instance variables, class variables, and constants, including the scope of each type and how inheritance can affect that scope
-# Instance methods vs. class methods
-# Method Access Control
-# Referencing and setting instance variables vs. using getters and setters
-# Class inheritance, encapsulation, and polymorphism
-# Modules
-# Method lookup path
-# self
-# Calling methods with self
-# More about self
+#x Classes and objects
+#x Use attr_* to create setter and getter methods
+#x How to call setters and getters
+#x Instance variables, class variables, and constants, including the scope of each type and how inheritance can affect that scope
+#x Instance methods vs. class methods
+#x Method Access Control
+#x Referencing and setting instance variables vs. using getters and setters
+#x Class inheritance, encapsulation, and polymorphism
+#x Modules
+#x Method lookup path
+#x self
 # Reading OO code
 # Fake operators and equality
 # Working with collaborator objects
 # Create a code spike # Practice these! 3 in the SPOT wiki. Showing object heirarchy.
+# Create code examples for different concepts.
 
 # OOP LS 120 Questions - Done
 # RB 129 Practice Problems - 
