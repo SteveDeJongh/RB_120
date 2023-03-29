@@ -19,9 +19,9 @@
 #x Method lookup path
 #x self
 # Reading OO code
-# Fake operators and equality
-# Working with collaborator objects
-# Create a code spike # Practice these! 3 in the SPOT wiki. Showing object heirarchy.
+#x Fake operators and equality
+#x Working with collaborator objects
+#x Create a code spike # Practice these! 3 in the SPOT wiki. Showing object heirarchy.
 # Create code examples for different concepts.
 
 # OOP LS 120 Questions - Done
@@ -1562,5 +1562,224 @@ You might only need a getter if you only want to access the data, but don’t wa
  getter or setter method?
 
 Any time you want to control how the user is able to access or change data - getters and setters protect the raw data
+
+=end
+
+
+# Code Examples:
+########################################################################
+######################## Required code examples:########################
+########################################################################
+
+=begin
+# **Polymorphism through inheritance**
+
+class Food
+  def bake
+  end
+end
+
+class Bread < Food
+  def bake
+    puts "I'm rising!"
+  end
+end
+
+class Roast < Food
+  def bake
+    puts "I'm roasting!"
+  end
+end
+
+class Flour < Food; end
+class Sugar < Food; end
+
+foods = [Bread.new, Roast.new, Flour.new, Sugar.new]
+foods.each {|food| food.bake}
+
+# **Polymorphism through duck-typing:**
+
+class Concert
+  attr_reader :songs, :lights, :stage
+
+  def run(personel)
+    personel.each do |person|
+      person.perform_concert(self)
+    end
+  end
+end
+
+class Musician
+  def perform_concert(concert)
+      play_music(concert.songs)
+  end
+
+  def play_music(songs)
+    # implementation...
+  end
+end
+
+class Security
+  def perform_concert(concert)
+    secure_stage(conert.stage)
+  end
+
+  def secure_stage(concert)
+    #implementation...
+  end
+end
+
+class StageHands
+  def perform_concert(concert)
+    adjust_lights(concert.lights)
+  end
+
+  def adjust_lights(lights)
+    #implementation...
+  end
+end
+
+# **Encapsulation (using method access control)**
+
+class Bike
+  attr_reader :modelname
+
+  def initialize(model)
+    @modelname = model
+  end
+
+  def change_model(model)
+    self.modelname = model
+  end
+
+  def model
+    "This bike a #{modelname}."
+  end
+
+  private
+    attr_writer :modelname #modelname setter method can only be called from within the class defintion.
+end
+
+trek = Bike.new('Trek')
+trek.change_model('Specialized')
+puts trek.model #=> "This bike is a Specialized."
+trek.modelname = "Trek" # Error, private method `modelname=` called.
+
+# **Class inheritance**
+
+class Animal
+end
+
+class Dog < Animal
+end
+
+class Cat < Animal
+end
+
+# **Module mixins**
+
+module Walkable
+  def walk
+    "Walking!"
+  end
+end
+
+class Hunman
+  include Walkable
+end
+
+class Animal
+  include Walkable
+end
+
+# **self**
+
+class Human
+  attr_writer :name
+  
+  def self.what_am_i? # self, indicating a class method. Can be called on the class itself.
+    "I'm a human!"
+  end
+
+  def change_name(new_name)
+    self.name = new_name # self, represents the calling object.
+  end
+end
+
+# **Super**
+
+class Animal
+  def initialize(name)
+    @name = name
+  end
+end
+
+class Dog < Animal
+  def initialize(name)
+    super # Passes all arguments to `initialize` method in superclass Animal.
+    @type = self.class
+  end
+end
+
+gryff = Dog.new('Gryff') #=> <Dog:encoding_of_object_id @name='Gryff', @type=Dog>
+
+# **How do you implement a fake operator in a custom class?**
+
+class Dog
+  attr_accessor :name
+
+  def +(other) # Fake operator defined within custom class.
+    self.name + other.name
+  end
+end
+
+# **Collaborator** **objects**
+
+class Human
+  attr_reader :pets
+
+  def initialize(name)
+    @name = name
+    @pets = []
+  end
+
+  def add_pet(x)
+    self.pets << x
+  end
+end
+
+class Pet
+  def initialize(name, type)
+    @name = name
+    @type = type
+  end
+end
+
+steve = Human.new('Steve')
+p steve.pets #=> empty array
+gryff = Pet.new('Gryff', 'Dog')
+steve.add_pet(gryff)
+p steve.pets #=> [<pet:encoding, @name = 'Gryff', @type = 'Dog'>]
+
+# Accidental variable assignment instead of method invocation
+
+class Car
+  attr_accessor :model, :mileage
+
+  def initialize(model, mileage)
+    @model = model
+    @mileage = mileage
+  end
+ 
+  def increment_mileage(miles)
+    new_mileage = mileage + miles
+    mileage = new_mileage # Initiailizing a new local variable `mileage` rather than calling the setter `mileage` method. Prepend `self.` to use the setter.
+  end
+end
+
+mazda = Car.new('az', 100)
+p mazda #=> <Car:encoding-of-object-id @model='az', @mileage=100>
+mazda.increment_mileage(100) # Method is broken.
+p mazda #=> <Car:encoding-of-object-id @model='az', @mileage=100>
 
 =end

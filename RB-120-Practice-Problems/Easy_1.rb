@@ -368,3 +368,22 @@ class Truck < Vehicle
 end
 
 =end
+
+class Car
+  attr_accessor :model, :mileage
+
+  def initialize(model, mileage)
+    @model = model
+    @mileage = mileage
+  end
+ 
+  def increment_mileage(miles)
+    new_mileage = mileage + miles
+    mileage = new_mileage # Initiailizing a new local variable `mileage` rather than calling the setter `mileage` method. Prepend `self.` to use the setter.
+  end
+end
+
+mazda = Car.new('az', 100)
+p mazda #=> <Car:encoding-of-object-id @model='az', @mileage=100>
+mazda.increment_mileage(100) # Method is broken.
+p mazda #=> <Car:encoding-of-object-id @model='az', @mileage=100>

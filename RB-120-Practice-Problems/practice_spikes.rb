@@ -11,7 +11,6 @@
 # - Defender should be able to block the ball
 # - The referee has a whistle. He wears black and is able to run and whistle.
 
-
 module Runable
   def run
     "Running!"
