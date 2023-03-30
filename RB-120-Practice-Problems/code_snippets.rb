@@ -397,7 +397,7 @@ require 'pry'
 
 # In order to get the desired output, we would need to call `jump` on each objects within the pets array.
 
-# bob.pets.each {|x| x.jump}
+# bob.pets.each {|pet| pet.jump}
 
 # 13.
 # class Animal
@@ -423,7 +423,7 @@ require 'pry'
 
 # Output: 'bark! bark!  bark! bark!'
 
-# This is due to the `@name` instance variabel not being initialized, and therfor the reference to @name in `dog_name` referencing `nil`.
+# This is due to the `@name` instance variable not being initialized, and therfor the reference to @name in `dog_name` referencing `nil`.
 # We can fix this by either intitializing the `@name` instance variable within our dog#intialize method, or by passing in `super` to
 # use the `Animal` class initialize method definition which initiailizes the instance variable.
 
@@ -461,6 +461,7 @@ require 'pry'
 # p al.name.object_id #=> 60
 # p alex.name #=> "Alexander"
 # p alex.name.object_id #=> 80
+# p al.name.object_id == alex.name.object_id #=> False
 
 # 15.
 # class Person
@@ -486,7 +487,9 @@ require 'pry'
 # Why is it generally safer to invoke a setter method (if available) vs. referencing the instance variable directly when trying to
 # set an instance variable within the class? Give an example.
 
-# ?????????????????
+# Just as it's a good idea to use getter methods rather than referencing the instance variable itself to control
+# how the data is output, setter methods can be used to validate the setting data, and ensure the data is stored
+# in the desired fashion. Ie: Uppercased, captialized, ensure the data is a string, ensure the data is an integers, etc.
 
 # 17.
 # Give an example of when it would make sense to manually write a custom getter method vs. using `attr_reader`.
@@ -547,7 +550,8 @@ require 'pry'
 # What is the `attr_accessor` method, and why wouldn’t we want to just add `attr_accessor` methods for every instance variable in our class? Give an example.
 
 # The `attr_accesssor` method is the method that creates getter and setter method for the instance variables listed after as symbols.
-# We maybe not want to add attr_accessor methods for every instance variable as we may have some instance variables that we don't want to change.
+# We maybe not want to add attr_accessor methods for every instance variable as we may have some instance variables that we don't want to change, or don't want
+# to be able to view.
 
 # For example:
 
@@ -569,13 +573,14 @@ require 'pry'
 # What is the difference between states and behaviors?
 
 # The difference between state and behaviors is that state is tracked at the object level via instance variables unique to each object,
-# while behaviors are instance methods available to all instances of the class.
+# while behaviors are instance methods available to all instances of the class, defined within the class.
 
 # 21. 
 # What is the difference between instance methods and class methods?
 
-# Instance methods are methods which are accessible to objects of that class. Class methods are only able to be called on the class itself,
-# often exposing data about the class. We do not need to instantiate any objects of the class to call a class method.
+# Instance methods are methods which are accessible to instantiated objects of that class. Class methods are only able
+# to be called on the class itself, often exposing data about the class. We do not need to instantiate
+# any objects of the class to call a class method.
 
 # 22.
 # What are collaborator objects, and what is the purpose of using them in OOP? Give an example of how we would work with one.
@@ -669,8 +674,9 @@ require 'pry'
 
 # What does the above code demonstrate about how instance variables are scoped?
 
-# The above code demonstrates that instance variables are scoped at the object level. Instance variables are accessible to instance methods
-# even if defined outside of the method and not passed in as an argument.
+# The above code demonstrates that instance variables are scoped at the object level, which each instance of the class creating
+# their own versions of the variables. Instance variables are accessible within an instance method even if they are initialized
+# outside  of the method and not passed in as an argument.
 
 # 26.
 # How do class inheritance and mixing in modules affect instance variable scope? Give an example.
@@ -718,7 +724,7 @@ require 'pry'
 # How does encapsulation relate to the public interface of a class?
 
 # Encapsulation lets us hide the internal representation of an object from the outside and only expose the methods and properties
-# that users of the object need. We used method access control to expose these properties and methods through the public interface of a class.
+# that users of the object need. We use method access control to expose these properties and methods through the public interface of a class.
 
 # 28.
 # class GoodDog
@@ -765,6 +771,21 @@ require 'pry'
 # This often occurs with methods defined in the `object` class, as all classes inherit from it. A commonly overrriden method is `to_s`,
 # while the `send` method (among others) can be accidentaly overrriden.
 
+# class Car
+#   attr_reader :name
+
+#   def initialize(name)
+#     @name = name
+#   end
+
+#   def to_s # Overrides the `to_s` method from the object class.
+#     "I'm a car named #{name}."
+#   end
+# end
+
+# Mazda = Car.new('Three')
+# puts Mazda #=> "I'm a car named three."
+
 # 30.
 # How is Method Access Control implemented in Ruby? Provide examples of when we would use public, protected, and private access modifiers.
 
@@ -786,14 +807,17 @@ require 'pry'
 # Modules can be thought of as containers of behaviors. They differ from classes as they can not instantiate any objects. Modules
 # typically share a 'has_a' relationship to the classes which they are included in. 
 
-# Classes are molds for the bahviors and states of instantiated objects. They contain the methods and behaviors the objects can do,
+# Classes are molds for the behaviors and states of instantiated objects. They contain the methods and behaviors the objects can do,
 # along with outlining the instance variables used to track each unique objects state. Classes have a "is_a" relationship with the objects
-# which are created from the class. Classes can only subclass from 1 superclass, however they can mixin in as many modules as they'd like.
+# which are created from the class. 
+
+# Classes can only subclass from 1 superclass, however they can mixin in as many modules as they'd like. This is rubys answer
+# to mulitple inheritance and helps maintain DRY code.
 
 # 32.
 # What is polymorphism and how can we implement polymorphism in Ruby? Provide examples.
 
-# Polymorhpism is the ability for different types of data to respond to a common interface. This is most commonly acheived through
+# Polymorhpism is the ability for different types of data to respond to a common interface. This can be acheived through
 # class inheritance or duck-typing.
 
 # class Animal
@@ -1020,7 +1044,7 @@ require 'pry'
 # Describe the inheritance structure in the code above, and identify all the superclasses.
 
 # `SomethingElse` subclasses and inherits from it's superclass `AnotherThing`
-# `AnotherThing` subclasses and hinerits from it's superclass `Thing`
+# `AnotherThing` subclasses and inherits from it's superclass `Thing`
 
 # The superclasses are `Thing` and `AnotherThing`
 

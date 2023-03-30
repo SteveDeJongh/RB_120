@@ -1782,4 +1782,68 @@ p mazda #=> <Car:encoding-of-object-id @model='az', @mileage=100>
 mazda.increment_mileage(100) # Method is broken.
 p mazda #=> <Car:encoding-of-object-id @model='az', @mileage=100>
 
+# Instance variables initialized from Modules
+
+module Swimmable
+  def enable_swimming
+    @can_swim = true
+  end
+end
+
+class Dog
+  include Swimmable
+
+  def swim
+    "swimming!" if @can_swim
+  end
+end
+
+class Cat
+  include Swimmable
+
+  def swim
+    "swimmer" if @can_swim
+  end
+end
+
+teddy = Dog.new
+teddy.enable_swimming # The @can_swim instance variable is initialzied uniquely for the teddy Dog object, but not any other
+# dog objects or the Cat object.
+p teddy.swim
+
+ruffus = Dog.new
+p ruffus.swim
+
+cat = Cat.new
+p cat.swim
+
 =end
+
+module Describable
+  def describe_shape
+    "I am a #{self.class} and have #{self.class::SIDES} sides."
+  end
+end
+
+class Shape
+  include Describable
+
+  def self.sides
+    self::SIDES
+  end
+  
+  def sides
+    self.class::SIDES
+  end
+end
+
+class Quadrilateral < Shape
+  SIDES = 4
+end
+
+class Square < Quadrilateral; end
+
+p Square.ancestors
+p Square.sides 
+p Square.new.sides 
+p Square.new.describe_shape 
