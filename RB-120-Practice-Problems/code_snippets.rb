@@ -1081,6 +1081,8 @@ require 'pry'
 # The method lookup path for the call to `fly` on pingu is Penguin < Migratory < Aquatic < Bird < Animal < Object ...
 # The fly method will not be found in `Flight` as it's not in the method lookup path for objects of the Penguin class.
 
+# We can verify this by calling `ancestors` on the pingu.class
+
 # 41.
 # class Animal
 #   def initialize(name)
@@ -1171,10 +1173,10 @@ require 'pry'
 
 # 44.
 # class MeMyselfAndI
-#   self # self refer to the classs MeMyselfAndI
+#   self # self refers to the classs MeMyselfAndI
 
 #   def self.me # Self referes to the class MeMyselfAndI
-#     self
+#     self #=> Self refers to the calling object. Which in this case is the class.
 #   end
 
 #   def myself
@@ -1203,7 +1205,7 @@ require 'pry'
 
 # The code actually outputs: <Student:encoding of object ID, @name="Adewale">
 # This is because although the method parameter "grade" has a default value, the instance variable grade is never initalized to that default
-# value.
+# value. This demonstrates how uninitialized instance variables are not yet part of the objects tracked state.
 
 # 46.
 # class Character
@@ -1467,7 +1469,8 @@ require 'pry'
 
 # An error is output as Module#drive is defined as if it were a class method. This code demonstrates that methods in modules
 # are to be defined in the same manner as in classes. Think of methods being defined in a modules as the same, with respect to the method
-# lookup chain, as methods defined within the class.
+# lookup chain, as methods defined within the class. It's as if we have copy and pasted the method definition from within the module
+# to the class definition.
 
 # 54.
 # class House

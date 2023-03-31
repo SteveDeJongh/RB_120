@@ -424,7 +424,7 @@ A module can not instantiate an object.
 
 14) What is a mixin?
 
-A mixin in when a module has been included into a class.
+A mixin in when a module has been included into a class using the `include` method.
 
 15) When is it good to use inheritance?
 
@@ -446,11 +446,12 @@ Behaviors are methods available to all instances of that class.
 
 19) How do you initialize a new object?
 
-To instantiate a new object, you call `new` on the objects class, and pass to new any intiailzing arguments.
+To instantiate a new object, you call `new` on the objects class, and pass to new any intiailzing arguments as required by the defined
+`initialize` method.
 
 20) What is a constructor method?
 
-The constructor method is the `initialize` method, a special method called whena new object is instnatiated.
+The constructor method is the `initialize` method, a special method called when a new object is instantiated.
 
 21) What is an instance variable, and how is it related to an object?
 
@@ -468,19 +469,19 @@ Objects encapsulate state by the use of instance variables. Instance variables c
 
 24) What is the difference between classes and objects?
 
-Classes are the defined mold of an object. They contain the instructions on data to retrive when instantiating a new object, and the behaviors
-availalbe to that object.
+Classes are the defined mold of an object. They contain the instructions on data to retrieve when instantiating a new object, and the behaviors
+available to that object.
 
 Objects are created from classes, and contain individual states. Objects act on behaviors defined in the class.
 
 25) How can we expose information about the state of the object using instance methods?
 
-To expose information about an object, we use getter instnace methods. Getter methods retrieve and often output the information contained
+To expose information about an object, we use getter instance methods. Getter methods retrieve and often output the information stored
 in an objects instance variables.
 
 26) What is a collaborator object, and what is the purpose of using collaborator objects in OOP?
 
-A collaborator object is an object that is part of another objects state. The object can be any type of object.
+A collaborator object is an object that is stored as part of another objects state. The object can be any type of object.
 Collaborator objects can often identify intended relationships between different objects in our code.
 
 # Page 2
@@ -493,7 +494,7 @@ methods to be called in very reader friendly manner, obj.name = "new_name" inste
 
 28) What is a getter method?
 
-A getter method is a method written to retrieve and often output the value of an instnace variable.
+A getter method is a method written to retrieve and often output the value of an instance variable.
 
 29) What is a setter method?
 
@@ -545,13 +546,16 @@ puts sparky.info
 32) # Why does the .change_info method not work as expected here?
 
 In the above example, in the change_info method, the name, height, and weight assignments are occuring to newly created variables
-created at the local method scope. In order for us to instead call the setter methods, we must first append `self` to the method calls
-so that the code knows were calling the instance method, and not initializing a new local variable.
+created at the local method scope. In order for us to instead call the setter methods, we must first prepend `self` to the method calls
+so that the code knows we're calling the instance method, and not initializing a new local variable.
 
 33) When would you call a method with self?
 
 We call a method with `self` to disambiguate from initializing or referencing local variable of the same name. `self` tells ruby
 that we care calling the method.
+
+The other use for `self` is when defining class methods. We prepend the method name with `self` in the class definition to indicate we are
+calling the method on the class itself.
 
 34) What are class methods?
 
@@ -1819,31 +1823,3 @@ p cat.swim
 
 =end
 
-module Describable
-  def describe_shape
-    "I am a #{self.class} and have #{self.class::SIDES} sides."
-  end
-end
-
-class Shape
-  include Describable
-
-  def self.sides
-    self::SIDES
-  end
-  
-  def sides
-    self.class::SIDES
-  end
-end
-
-class Quadrilateral < Shape
-  SIDES = 4
-end
-
-class Square < Quadrilateral; end
-
-p Square.ancestors
-p Square.sides 
-p Square.new.sides 
-p Square.new.describe_shape 
