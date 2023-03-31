@@ -603,11 +603,11 @@ the existing instance variable of the calling object.
 
 We use self whenever we are calling an instnace method from within the class. `self` changes depending on it's scope by representing different
 objects. Used inside of an instance variables it represents the calling object. Used inside of the class but outside of an instance method
-it represents the class itself and used to define a class method.
+it represents the class itself and is used to define a class method.
 
 43) What is inheritance, and why do we use it?
 
-Inhertiance is when a class inherits the behaviors of a parent (superclass) class, or inherits behaviors from a module.
+Inheritance is when a class inherits the behaviors of a parent (superclass) class, or inherits behaviors from a module (interface inheritance).
 
 44) Give an example of how to use class inheritance.
 
@@ -619,7 +619,7 @@ class Dog < Animal
 
 end
 
-The Dog class will inherit all behavors of the `Animal` class.
+The Dog class will inherit all behaviours of the `Animal` class.
 
 45) Give an example of overriding. When would you use it?
 
@@ -633,7 +633,7 @@ class Animal
 end
 
 class Dog < Animal
-  def Move # This method will override the `animal#Move` method thanks to Ruby method look up path.
+  def Move # This method will override the `animal#Move` method thanks to Rubys method look up path.
     "Run"
   end
 end
@@ -670,7 +670,7 @@ end
 48) When creating a hierarchical structure, under what circumstance would a module be useful?
 
 A module is beneficial when some subclasses of a superclass, but not all, exhibit a particular behavior. Mixing in a module helps keep code DRY
-and allows the code to be reuses in various different classes. Modules typically use a "able" suffix on whatever verb vest describes the
+and allows the code to be reused in various different subclasses. Modules typically use a "able" suffix on whatever verb best describes the
 behavior.
 
 49) What is interface inheritance, and under what circumstance would it be useful in comparison to class inheritance?
@@ -695,12 +695,14 @@ we can use mixin modules to add extra functionality to different classes by mixi
 
 53) Describe the use of modules as containers.
 
-Modules as containers are when modules contain behaviors (methods). This is very helpful for when methods may seem out of place for
+Modules as containers are when modules contain behaviors (methods) that need to be used accross the program in a manner that doesn't align 
+exactly with the class hierarchial structure. This is very helpful for when methods may seem out of place for
 a class heirarchal system, but may be requried in mutliple places in your code.
 
 54) Why should a class have as few public methods as possible?
 
-Having as few public methods as possible helps us simplify using that class and protect data from undesired changes from the outer world.
+Having as few public methods as possible helps us simplify using that class and protects the data from undesired changes and exposure
+from the public interface.
 
 55) What is the private method call used for?
 
@@ -708,8 +710,8 @@ A private method are methods that can only be used from within the class definit
 
 56) What is the protected keyword used for?
 
-The protected keyword is used to indicate to ruby that any method below the keyword is protected. Protected methods are methods which
-are similar to private methods, but that they allow access between class instances (in comparison for example)
+The protected keyword is used to indicate to ruby that any method below the keyword is protected. Protected methods are those which
+are similar to private methods, but that they allow access between class instances (in comparison for example).
 
 57) What are two rules of protected methods?
 
@@ -717,14 +719,15 @@ They can not be invoked outside of the class, and other instances of the class c
 
 58) Why is it generally a bad idea to override methods from the Object class, and which method is commonly overridden?
 
-Overrriding `object` class methods is generally a bad idea as the overriding method is often not the desired method to call. This can lead
+Overriding `object` class methods is generally a bad idea as the overriding method is often not the desired method to call. This can lead
 to problems debugging code, and often leads to argument errors.
 
 `to_s` is a commonly overridden object class method.
 
 59) What is the relationship between a class and an object?
 
-A Class is the mold of the object. The object will contain invidual state information, while the class will contain it's behaviors.
+A Class is the mold of the object. The object will contain invidual state information, while the class will outline the states to track
+and contain it's behaviors.
 
 60) Explain the idea that a class groups behaviors.
 
@@ -737,8 +740,6 @@ Objects all share access to the same instance methods, but do no share their ins
 
 62) The values in the objects' instance variables (states) are different, but they can call the same instance methods (behaviors)
  defined in the class.
-
-
 
 63) Classes also have behaviors not for objects (class methods).
 
