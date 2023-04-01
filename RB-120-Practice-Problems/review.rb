@@ -18,11 +18,11 @@
 #x Modules
 #x Method lookup path
 #x self
-# Reading OO code
+#x Reading OO code
 #x Fake operators and equality
 #x Working with collaborator objects
 #x Create a code spike # Practice these! 3 in the SPOT wiki. Showing object heirarchy.
-# Create code examples for different concepts.
+#x Create code examples for different concepts.
 
 # OOP LS 120 Questions - Done
 # RB 129 Practice Problems - 
@@ -63,7 +63,7 @@ p puppy == another_puppy
 # If we did run the code, what would be output on line 35 and why?
 
 # On 35 we are checking the equality of two objects of the Dog class. The output is false, as the `==` method
-# checks if the both objects are the same by object identity.
+# checks if the both objects are the same by object identity as it is using the default `object` class implementation of `==`
 
 # In order to check equality via the instance variable names, we have to define a new `==` method inside the class.
 
@@ -78,8 +78,8 @@ end
 # 2)
 
 # Tell us a little about `Method Access control` with a few examples.
-# MAC is that excecise of using Public, private, and protected methods within a class's defintion.
-# By default, all method defined in a class are public. The means that the method can be called anywhere in the codebase.
+# MAC is that exercise of using Public, private, and protected methods within a class's defintion.
+# By default, all methods defined in a class are public. The means that the method can be called anywhere in the codebase.
 # Private methods can only be called from within the class and are hidden from calls from outside of the class definition.
 # Protected methods are accessible to call from all instances of the same class.
 
@@ -1272,7 +1272,7 @@ In order for this code to return `swimming`, we must first call `teddy.enable_sw
 
 103) Are class variables accessible to sub-classes?
 
-Yes, they are accessible to subclasses.
+Yes, they are accessible to subclasses and is the reason why it's suggested to avoid class variables when working with inheritance.
 
 104) Why is it recommended to avoid the use of class variables when working with inheritance?
 
@@ -1823,4 +1823,3 @@ cat = Cat.new
 p cat.swim
 
 =end
-
