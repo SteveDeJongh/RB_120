@@ -210,3 +210,106 @@ class GeneralDentist < Dentist
 end
 
 =end
+
+=begin
+
+Design a Sports Team (Author Unknown...thank you!)
+
+- Include 4 players (attacker, midfielder, defender, goalkeeper)
+- All the players’ jersey is blue, except the goalkeeper, his jersey is white with blue stripes
+- All players can run and shoot the ball.
+- Attacker should be able to lob the ball
+- Midfielder should be able to pass the ball
+- Defender should be able to block the ball
+- The referee has a whistle. He wears black and is able to run and whistle.
+
+nouns: player, attacker, midfielder, defender, goalkeeper, referee
+verbs: run, shoot the ball, lob the ball, pass the ball, block the ball, whistle,
+
+module Runable
+  def run
+    "Running!"
+  end
+end
+
+
+class Player
+  include Runable
+
+  def initialize(jersey)
+    @jersey_color = jersey
+  end
+
+  def shoot
+    "shooting the ball!"
+  end
+end
+
+class Attacker < Player
+  def initialize
+    super('blue')
+  end
+
+  def lob
+    "Lobbing!"
+  end
+end
+
+class Midfielder < Player
+  def initialize
+    super('blue')
+  end
+
+  def pass
+    "Passing!"
+  end
+end
+
+class Defender < Player
+  def initialize
+    super('blue')
+  end
+
+  def block
+    "Blocking!"
+  end
+end
+
+class Goalkeeper < Player
+  def initialize
+    super('white')
+  end
+end
+
+class Referee
+  include Runable
+
+  def initialize
+    @whistle = true
+  end
+
+  def whistle
+    "Whistling!"
+  end
+end
+
+player = Player.new('blue')
+attacker = Attacker.new
+midfielder = Midfielder.new
+defender = Defender.new
+goalkeeper = Goalkeeper.new
+ref = Referee.new
+p player
+p attacker
+p midfielder
+p defender
+p goalkeeper
+p ref
+
+[player, attacker, midfielder, defender, goalkeeper, ref].each {|person| p person.run}
+p attacker.lob
+p midfielder.pass
+p defender.block
+p ref.whistle
+
+=end

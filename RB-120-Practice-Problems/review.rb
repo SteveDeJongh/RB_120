@@ -829,7 +829,7 @@ def change_grade(new_grade)
   grade = new_grade
 end
 
-The above code would be initializing a new localally scoped variable "grade" within the method and not reassigning the instance variable @grade
+The above code would be initializing a new locally scoped variable "grade" within the method and not reassigning the instance variable @grade
 or using the setter grade= method.
 
 70)
@@ -863,7 +863,7 @@ bob.name                  # => 'Robert'
 class Person
   attr_accessor :name
 
-  def intialize(name)
+  def initialize(name)
     @name = name
   end
 end
