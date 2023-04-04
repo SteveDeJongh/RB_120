@@ -182,22 +182,50 @@ p conan.rage # true
 p gandolf.manapoints # => 100
 p gandolf.hitpoints #25
 
-=end
-
 # Dictionary
 
 # Implement the following classes such that we get the desired output
 
 class Dictionary
+  attr_accessor :words
+
   def initialize
     @words = []
   end
+
+  def <<(word)
+    words << word
+    words.sort!
+  end
+
+  def words
+    @words.each {|word| word}
+  end
+
+  def by_letter(letter)
+    words.select do |word|
+      word.name.upcase[0] == letter.upcase
+    end
+  end
+
 end
 
 class Word
+  include Comparable
+
+  attr_reader :name
+
   def initialize(name, definition)
     @name = name
     @definition = definition
+  end
+
+  def to_s
+    name
+  end
+
+  def <=>(other)
+    name <=> other.name
   end
 end
 
@@ -213,7 +241,7 @@ dictionary << banana
 dictionary << cherry
 dictionary << blueberry
 
-puts dictionary.words
+puts dictionary.words # Result should be alphabetical.
 # Apple
 # Banana
 # Blueberry
@@ -225,3 +253,72 @@ puts dictionary.by_letter("a")
 puts dictionary.by_letter("B")
 # Banana
 # Blueberry
+
+# Library
+
+# Given the two classes defined below, implement the necessary methods to get the expected results.
+
+class Library
+  attr_accessor :books
+
+  def initialize
+    @books = []
+  end
+
+  def <<(book)
+    books << book
+  end
+
+  def checkout_book(name, auth)
+    book = Book.new(name, auth)
+    if books.include?(book)
+      books.delete(book)
+    else
+      puts "The library does not have that book"
+    end
+  end
+
+end
+
+class Book
+  attr_reader :title, :author
+
+  def initialize(title, author)
+    @title = title
+    @author = author
+  end
+
+  def to_s
+    "#{title} by #{author}"
+  end
+
+  def ==(other)
+    title = other.title && author == other.author
+  end
+
+end
+
+lib = Library.new
+
+lib << Book.new('Great Expectations', 'Charles Dickens')
+lib << Book.new('Romeo and Juliet', 'William Shakespeare')
+lib << Book.new('Ulysses', 'James Joyce')
+
+lib.books.each { |book| puts book }
+  # => Great Expectations by Charles Dickens
+  # => Romeo and Juliet by William Shakespeare
+  # => Ulysses by James Joyce
+
+p lib.checkout_book('Romeo and Juliet', 'William Shakespeare')
+  # deletes the Romeo and Juliet book object from @books and returns it
+  # i.e. returns #<Book:0x0000558ee2ffcf50 @title="Romeo and Juliet", @author="William Shakespeare">
+
+lib.books.each { |book| puts book }
+  # => Great Expectations by Charles Dickens
+  # => Ulysses by James Joyce
+
+lib.checkout_book('The Odyssey', 'Homer')
+  # => The library does not have that book
+
+=end
+
