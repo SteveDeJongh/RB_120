@@ -24,8 +24,8 @@
 #x Create a code spike # Practice these! 3 in the SPOT wiki. Showing object heirarchy.
 #x Create code examples for different concepts.
 
-# OOP LS 120 Questions - Done
-# RB 129 Practice Problems - 
+# xOOP LS 120 Questions - Done
+# xRB 129 Practice Problems - 
 
 # March 17th RB 129 Study Session
 =begin
