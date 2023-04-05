@@ -3,6 +3,34 @@
 # https://github.com/gcpinckert/rb120_rb129/blob/main/study_guide/study_session_8_12.md
 
 =begin
+# Compare FishAliens
+
+# Modify the given code to achieve the expected output
+
+class FishAliens
+  def initialize(age, name)
+    @age = age
+    @name = name
+  end
+
+  def ==(other)
+    self.class == other.class
+  end
+
+  protected  # Protected methods defined in the superclass are inherited and accessible to subclasses.
+
+  attr_reader :age, :name
+end
+
+class Jellyfish < FishAliens; end
+
+class OctoAlien < FishAliens; end
+
+fish = Jellyfish.new(100, "Fish")
+alien = OctoAlien.new(75, "Roger")
+
+                      # Expected output:
+p fish == alien       # => false
 
 # Attack
 
@@ -436,4 +464,4 @@ p david > chris
 juniors.valedictorian
   # => "Anna has the highest GPA of 3.85"
 
-  =end
+=end
