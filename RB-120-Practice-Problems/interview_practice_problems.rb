@@ -1,4 +1,5 @@
 ########## RB 129 Interview Practice Problems #######
+require 'pry'
 =begin
 # Problem by Natalie Thompson
 class Person
@@ -23,14 +24,30 @@ puts roger
 # "My name is Roger and I am a Carpenter"
 
 # ================================================================
-
+=end
 # Problem received from Raul Romero
 class Human 
+  attr_accessor :hcolour
   attr_reader :name
 
-def initialize(name="Dylan")
-  @name = name
-end
+  def initialize(name="Dylan")
+    @name = name
+    @hcolour = "blonde"
+  end
+
+  def hair_colour(col)
+    "Hi, my name is #{name} and I have #{hcolour} hair."
+  end
+
+  def self.hair_colour(col)
+    color = "blondeeee"
+    if col.length < 1
+      color = "blonde"
+    else
+      color = col
+    end
+    "Hi, my name is #{name} and I have #{color} hair."
+  end
 
 end
 
@@ -39,7 +56,7 @@ puts Human.new("Jo").hair_colour("blonde")
 
 puts Human.hair_colour("")              
 # Should "Hi, my name is Dylan and I have blonde hair."
-
+=begin
 # ================================================================
 
 class Human  # Problem received from Raul Romero
@@ -237,7 +254,6 @@ p gandolf.soul_steal(valdimar) #=> [#<Wizard:0x000055d782470810 @name="Valdimar"
 
 p gandolf.souls[0].fireball #=> "casts fireball for 500 damage!"
 
-=end
 # ======================================================================== ???
 
 # LS Man...legend says LS Man first appeared in SPOT.
@@ -283,3 +299,4 @@ LSMan.fight_crime
 # => I am LSMan!
 # => I fight crime with my coding skills ability!
 # ========================================================================
+=end
