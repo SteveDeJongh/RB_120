@@ -23,8 +23,8 @@ puts roger
 # Output:
 # "My name is Roger and I am a Carpenter"
 
-# ================================================================
-=end
+# ================================================================ Done
+
 # Problem received from Raul Romero
 class Human 
   attr_accessor :hcolour
@@ -46,9 +46,8 @@ class Human
     else
       color = col
     end
-    "Hi, my name is #{name} and I have #{color} hair."
+    "Hi, my name is Dylan and I have #{color} hair."
   end
-
 end
 
 puts Human.new("Jo").hair_colour("blonde")  
@@ -56,15 +55,24 @@ puts Human.new("Jo").hair_colour("blonde")
 
 puts Human.hair_colour("")              
 # Should "Hi, my name is Dylan and I have blonde hair."
-=begin
-# ================================================================
+
+# ================================================================ Done
 
 class Human  # Problem received from Raul Romero
-  attr_reader :name 
+  attr_reader :fname, :lname
   
   def initialize(name)
+    @fname = 'anna'
+    @lname = name
   end
- 
+
+  def equal?(other)
+    self.class == other.class
+  end
+
+  def +(other)
+    "#{self.fname}#{other.lname}"
+  end 
 end
 
 gilles = Human.new("gilles") 
@@ -73,9 +81,7 @@ anna = Human.new("gilles")
 puts anna.equal?(gilles) #should output true # 
 puts anna + gilles # should output annagilles 
 
-
-# ================================================================
-
+# ================================================================ Done?
 
 #describe what the code below outputs and why from Joseph Ochoa
 
@@ -121,8 +127,9 @@ end
 
 conan = Barbarian.new('barb') 
 rob = Monster.new('monst')
-conan.characters << rob
-p conan.display
+conan.characters << rob # uses array#<< as the method is being called on the characters array directly.
+p conan.display # return `nil` as the getter methof `name` called within the `display` method calls returns an uninitialized
+# instance variable `name`
 
 # ================================================================
 
@@ -141,7 +148,6 @@ end
 class Barbarian
   
 end
-
 
 # ================================================================ Done
 
