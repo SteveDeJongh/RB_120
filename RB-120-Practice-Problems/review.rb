@@ -27,6 +27,21 @@
 # xOOP LS 120 Questions - Done
 # xRB 129 Practice Problems - 
 
+# Interview concepts to go over:
+# OOP
+# Classes
+# Objects
+# Instance variables, class variables, Constants
+# Instance vs Class methods
+# Inheritance, interface and class
+# Encapsulation
+# MAC
+# Polymorhpism
+# super
+# modules
+# MLP
+
+
 # Sample Problems from Ggcpinckert
 
 # March 17th RB 129 Study Session
