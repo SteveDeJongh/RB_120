@@ -2025,6 +2025,61 @@ p mac1==mac3 #=> true
 # by defining a common method name in each class, that takes the same number of arguments, and within that method calling the appropriate
 # methods for that particular class's execution of the method.
 
+# Example of Inheritance
+class Human
+  def talk
+    "Talking"
+  end
+end
+
+class Adult < Human
+  def talk
+    "Inteligent talking!"
+  end
+end
+
+class Baby < Human
+  def talk
+    "Indistinct crying"
+  end
+end
+
+[Human.new, Adult.new, Baby.new].each {|human| p human.talk}
+
+# Example of duck typing
+
+class Concert
+  def show(people)
+    people.each do |people|
+      people.run_show(self)
+    end
+  end
+end
+
+class Singer
+  def run_show(concert)
+    sing
+  end
+
+  def sing
+    p "Singing!"
+  end
+end
+
+class Dancer
+  def run_show(concert)
+    dance
+  end
+
+  def dance
+    p "Dancing at the show"
+  end
+end
+
+people = [Singer.new, Dancer.new]
+
+Concert.new.show(people)
+
 # super
 # modules
 # MLP
