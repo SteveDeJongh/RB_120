@@ -2013,6 +2013,18 @@ p mac1==mac2 #=> false
 p mac1==mac3 #=> true
 
 # Polymorphism
+
+# Polymorphism is the ability for different types of data to respond to a common interface. Enables different object types to
+# to respond to a common method call. This can be achieved through inheritance or Ducktyping.
+
+# Inheritance would be by ensure that all different objects have access to a method of a common name, and have different
+# executions of the method. This is done by method overriding, and defining a gereral purpose method in the superclass,
+# then altering the methods execution in each of the subclasses.
+
+# Through duck typing, we are ensuring that all different unrelated types of objects respond to the same method name. We do this
+# by defining a common method name in each class, that takes the same number of arguments, and within that method calling the appropriate
+# methods for that particular class's execution of the method.
+
 # super
 # modules
 # MLP
