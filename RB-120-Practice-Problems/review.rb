@@ -41,7 +41,6 @@
 # modules
 # MLP
 
-
 # Sample Problems from Ggcpinckert
 
 # March 17th RB 129 Study Session
@@ -1840,3 +1839,126 @@ cat = Cat.new
 p cat.swim
 
 =end
+
+# Code Example of different concepts
+
+# OOP
+
+class NewClass; end
+
+object = NewClass.new
+
+p object
+
+# Classes
+
+class NewClass2
+  def initialize(name) # Constructor `initialize` method with a parameter for `name` to initialize the `@name` instance variable.
+    @name = name
+  end
+end
+
+# NewClass2 is the mold for any objects we create of that class. The initialzie constructor method is called when we 
+# instantiate a new object, and initializes the objects instance variables to the values passed in.
+
+object2 = NewClass2.new('steve2') #instantiating a new `NewClass2` object, and passing in an argument for `name` parameter.
+
+p object2 #=> <NewClass2:encoding_of_object_id @name=`steve2`>
+
+# Objects
+
+class NewClass3 < NewClass2
+  attr_reader :name # getter method for instance variable defined in a class inherited `initialize` method works. Instance variables
+  # are scoped at the object level, therfor value for getter method is in scope.
+
+  def move
+    "#{name} is rolling!" # can be either @name or `name` as we've defined a getter method.
+  end
+end
+
+object3 = NewClass3.new('steve3') # Uses class inheritance to inherit the `initialize` method from `NewClass2`
+
+p object3 #=> <NewClass3:encoding_of_object_id @name=`steve3`>
+
+p object3.move #=> steve3 is rolling! # Calls the `move` method defined in `NewClass3`, which using string interpolation to 
+# include the `@name` value in the output string.
+
+# Instance variables, class variables, Constants
+
+CONST = "OUTSIDE"
+
+class NewClass4 < NewClass3
+  @@classvar = "I'm a class var!"
+
+  def const # Instance method to call the CONST constant.
+    CONST
+  end
+
+  def self.show_class_var
+    @@classvar
+  end
+
+  def show_my_class_var
+    @@classvar
+  end
+
+  def name #getter method to show instance variable
+    @name
+  end
+end
+
+object4 = NewClass4.new('steve4')
+
+p object4 #=> <NewClass4:encoding_of_object_id @name='steve4'>
+p object4.name #=> steve4
+p object4.const #=> OUTSIDE
+p NewClass4.show_class_var #=> I'm a class var! # class method returning the class variable
+p object4.show_my_class_var #=> I'm a class var! # instnace method returning the class variable.
+
+# Instance vs Class methods
+
+class NewClass5 < NewClass4
+  def self.i_am_a_class_method
+    "A class method of the NewClass5 class!"
+  end
+
+  def i_am_a_instance_method
+    "I'm an object of a #{self.class}"
+  end
+end
+
+object5 = NewClass5.new('steve5')
+
+p NewClass5.i_am_a_class_method
+p object5.i_am_a_instance_method
+
+# Inheritance, interface and class
+
+module Jumpable
+  def jump
+    "Jumping!"
+  end
+end
+
+class NewClass6 < NewClass5 # class inheritance
+  include Jumpable # interface inheritance
+
+  def dance
+    "Dancing"
+  end
+end
+
+object6 = NewClass6.new('steve6')
+
+p object6.jump # Instance method inherited from module `Jumpable`
+p object6.i_am_a_instance_method # instance method inherited from superclass `NewClass5`
+
+# Encapsulation
+
+
+
+# MAC
+# Polymorhpism
+# super
+# modules
+# MLP
