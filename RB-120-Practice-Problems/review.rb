@@ -1840,6 +1840,8 @@ p cat.swim
 
 =end
 
+=begin
+
 # Code Example of different concepts
 
 # OOP
@@ -1953,12 +1955,64 @@ object6 = NewClass6.new('steve6')
 p object6.jump # Instance method inherited from module `Jumpable`
 p object6.i_am_a_instance_method # instance method inherited from superclass `NewClass5`
 
+=end
+
 # Encapsulation
 
+class Capsulating
+  attr_reader :name
 
+  def initialize(name, sin)
+    @name = name
+    @sin = sin
+  end
+
+  def show_sin
+    "xxx-xxx-" + sin[-4,4]
+  end
+
+  private
+
+  attr_reader :sin
+end
+
+# This demonstrates using method access control for encapsulation. Hiding bits of functionality from the user interface.
+# To display the objects `sin`, we can not call the getter method directly, instead we call `show_sin` which only displays
+# the last 4 digits of the users sin number.
+
+# Meanwhile, we have the public `name` getter method which can be aclled directly from the public interface.
+
+steve = Capsulating.new('steve', '123-123-1234')
+
+p steve.show_sin #=> xxx-xxx-1234
+p steve.name #=> steve
 
 # MAC
-# Polymorhpism
+
+# All methods defined in a class are by default `public` until an access modifier keyword is used.
+
+class Mac
+  def initialize(age)
+    @age = age
+  end
+
+  def ==(other)
+    age == other.age
+  end
+
+  protected # if this were private, the `==` comparison method would not be able to retrieve the `age` of the `other` object.
+
+  attr_reader :age
+end
+
+mac1 = Mac.new(10)
+mac2 = Mac.new(20)
+mac3 = Mac.new(10)
+
+p mac1==mac2 #=> false
+p mac1==mac3 #=> true
+
+# Polymorphism
 # super
 # modules
 # MLP
