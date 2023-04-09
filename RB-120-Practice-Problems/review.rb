@@ -2170,4 +2170,21 @@ end
 p Racoon.new.walk #=> Walking!
 p Racoon.new.class.ancestors #=> Racoon, Scratchable, Barkable, Animal, Walkable (find `walk`), object, kernel, basicobject
 
-# Constant Resolution operator (::)
+# Namespace Resolution operator (::)
+
+# The namespace resolution operator can be used to help direct ruby search to resolve a constant.
+
+# If the constant is not defined within the lexical scope, we can tell ruby where to find it.
+
+class Computer
+  GREETINGS = ['hi', 'hello']
+end
+
+class Laptop
+  def greet
+    Computer::GREETINGS.sample # Tells ruby to get `GREETINGS` from `Computer` class.
+    # GREETINGS.sample # Will raise an error as GREETINGS is  not in scope.
+  end
+end
+
+p Laptop.new.greet #=> "hello" or "hi"
