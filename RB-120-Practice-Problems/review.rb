@@ -40,6 +40,8 @@
 # super
 # modules
 # MLP
+# Namespace resolution operator
+# OO Programming book
 
 # Sample Problems from Ggcpinckert
 
@@ -1860,7 +1862,7 @@ class NewClass2
   end
 end
 
-# NewClass2 is the mold for any objects we create of that class. The initialzie constructor method is called when we 
+# NewClass2 is the mold for any objects we create of that class. The initialize constructor method is called when we 
 # instantiate a new object, and initializes the objects instance variables to the values passed in.
 
 object2 = NewClass2.new('steve2') #instantiating a new `NewClass2` object, and passing in an argument for `name` parameter.
@@ -1954,8 +1956,6 @@ object6 = NewClass6.new('steve6')
 
 p object6.jump # Instance method inherited from module `Jumpable`
 p object6.i_am_a_instance_method # instance method inherited from superclass `NewClass5`
-
-=end
 
 # Encapsulation
 
@@ -2173,7 +2173,6 @@ p Racoon.new.class.ancestors #=> Racoon, Scratchable, Barkable, Animal, Walkable
 # Namespace Resolution operator (::)
 
 # The namespace resolution operator can be used to help direct ruby search to resolve a constant.
-
 # If the constant is not defined within the lexical scope, we can tell ruby where to find it.
 
 class Computer
@@ -2188,3 +2187,5 @@ class Laptop
 end
 
 p Laptop.new.greet #=> "hello" or "hi"
+
+=end
