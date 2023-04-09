@@ -2081,5 +2081,93 @@ people = [Singer.new, Dancer.new]
 Concert.new.show(people)
 
 # super
+
+# The `super` keyword is provided by ruby to divert the program flow to a previously defined method in the method lookup path.
+# This can be useful for constructor methods, or any method where we wish to inherit a previously defined methods behavior
+# but add extra executions within the called method.
+
+class Human
+  def initialize(name)
+    @name = name
+  end
+end
+
+class Adult < Human
+  def initialize(name) # parameter to be passed to super must be defined in local method.
+    super # By default, passes all arguments up to the previously defined method.
+    @type = 'Adult'
+  end
+end
+
+steve = Adult.new('steve') # Passing in `steve` argument to pass to `super`.
+
+p steve #=> <Adult:encoding_of_object_id @name=`steve`, @type=`Adult`>
+
 # modules
+
+# Modules can be used for; namespacing, containers, and mixin modules. 
+
+# Namespacing is when we use modules to group similar classes together, and is particularly helpful in large codebases to avoid
+# accidental interference between similarly named classes.
+
+module Humans
+  class Child; end
+
+  class Adult; end
+end
+
+child = Humans::Child.new
+adult = Humans::Adult.new
+
+p child #=> <Humans::Child:encoding of object id>
+p adult #=> <Humans::Adult:encoding of object id>
+
+# child2 = Child.new # return an error, as `Child` class is not in scope.
+
+# Modules used as containers simply house methods that seem out of place within the codebase.
+
+module Conversion
+  def self.mph_to_kpb(num)
+    num * 1.6
+  end
+end
+
+valinkph = Conversion.mph_to_kpb(10)
+p valinkph #=> 16.0
+
+# Lastly, modules can be used to mix in behaviors(methods) that will be shared accross multiple classes but don't
+# align with the class inheritance structure. These are typically named in a "-able" fashion ie: "Walkable"
+
+module Walkable
+  def walk
+    "Walking!"
+  end
+end
+
+class Dog
+  include Walkable
+end
+
+p Dog.new.walk #=> "Walking!"
+
 # MLP
+
+# The method lookup path is the path in which ruby looks through to resolve the method call. Ruby will first search the calling
+# objects class, then any mixin modules from last included to first, then the inheritance structure.
+
+module Barkable; end
+module Scratchable; end
+
+class Animal
+  include Walkable
+end
+
+class Racoon < Animal
+  include Barkable
+  include Scratchable
+end
+
+p Racoon.new.walk #=> Walking!
+p Racoon.new.class.ancestors #=> Racoon, Scratchable, Barkable, Animal, Walkable (find `walk`), object, kernel, basicobject
+
+# Constant Resolution operator (::)
