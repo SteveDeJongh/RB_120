@@ -2189,3 +2189,45 @@ end
 p Laptop.new.greet #=> "hello" or "hi"
 
 =end
+
+module Talkable
+  def talk
+    "I can talk!"
+  end
+end
+
+class Teacher
+  include Talkable
+  attr_accessor :name, :subject # Accessor methods, define getter and setter methods
+
+  def initialize(name)
+    @name = name # Instance variable initialization.
+  end
+
+  def teach # Instance method defined in `Teacher`
+    "I'm teaching!"
+  end
+end
+
+class GeographyTeacher < Teacher
+  def initialize(name)
+    super # Example of call to `super`, all arguments are passed up the chain by default.
+    @subject = 'Geography'
+  end
+
+  def teachmaps # Instance method defined in `GeographyTeacher` class.
+    "I'm talking about maps!"
+  end
+
+end
+
+prof = GeographyTeacher.new('Steve')
+
+p prof.name # use of accessor method :name
+p prof.subject
+p prof.teach # Call to `teach`, method is accessible as `GeographyTeacher` subclasses from the `Teacher` superclass.
+p prof.teachmaps # Call to `GeographyTeacher::teachmaps`
+p prof.talk # Call to `talk` method defined in mixin module `Talkable`, which is mixed in
+# `GeographyTeacher` superclass `Teacher`
+
+p prof.class.ancestors #=> GeographyTeacher, Teacher, Talkable, Object, Kernel, BasicObject
