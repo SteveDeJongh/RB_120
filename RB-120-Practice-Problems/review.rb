@@ -2190,6 +2190,9 @@ p Laptop.new.greet #=> "hello" or "hi"
 
 =end
 
+# Warmup:
+=begin
+
 module Talkable
   def talk
     "#{name} I can talk!" # Use of `attr_reader` getter method to interpolate the `name` instance variable into the string.
@@ -2301,3 +2304,5 @@ prof.addbook(geo101)
 
 p prof
 p teach
+
+=end
