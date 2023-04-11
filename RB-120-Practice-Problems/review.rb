@@ -2192,42 +2192,112 @@ p Laptop.new.greet #=> "hello" or "hi"
 
 module Talkable
   def talk
-    "I can talk!"
+    "#{name} I can talk!" # Use of `attr_reader` getter method to interpolate the `name` instance variable into the string.
   end
+end
+
+class Admin
+  MAJOR2 = "I'm out of scope for methods in the Teacher class, but you can reach in and get me!"
 end
 
 class Teacher
   include Talkable
-  attr_accessor :name, :subject # Accessor methods, define getter and setter methods
+  attr_accessor :name, :gender # Accessor methods, define getter and setter methods
+  
+  MAJOR = "I'm the const"
 
-  def initialize(name)
+  @@num_of_teachers = 0
+
+  def initialize(name, age)
     @name = name # Instance variable initialization.
+    @age = age
+    @@num_of_teachers += 1
   end
 
   def teach # Instance method defined in `Teacher`
     "I'm teaching!"
   end
+
+  def self.number_of_teachers
+    @@num_of_teachers
+  end
+
+  protected
+
+  attr_reader :age
 end
 
 class GeographyTeacher < Teacher
-  def initialize(name)
+
+  def initialize(name, age)
     super # Example of call to `super`, all arguments are passed up the chain by default.
     @subject = 'Geography'
+    @books = []
   end
 
   def teachmaps # Instance method defined in `GeographyTeacher` class.
     "I'm talking about maps!"
   end
 
+  def what_do_i_teach?
+    "My name is #{name} and I'm a #{subject} teacher."
+  end
+
+  def ==(other)
+    self.age == other.age
+  end
+
+  def addbook(book)
+    self.books << book
+  end
+
+  def printtheconsts
+    MAJOR
+    Admin::MAJOR2 # Namespace resolution operator used to reach in to out-of-scope Admin class for MAJOR2 constant.
+  end
+
+  private
+
+  attr_accessor :books
+  attr_reader :subject
+
 end
 
-prof = GeographyTeacher.new('Steve')
+class Book
+  def initialize(name, subject, pages)
+    @name = name
+    @subject = subject
+    @pages = pages
+  end
+end
+
+prof = GeographyTeacher.new('Steve', 22)
+teach = GeographyTeacher.new('Jon', 22)
+geo101 = Book.new('Geography maps', 'Geography', 150)
 
 p prof.name # use of accessor method :name
-p prof.subject
 p prof.teach # Call to `teach`, method is accessible as `GeographyTeacher` subclasses from the `Teacher` superclass.
 p prof.teachmaps # Call to `GeographyTeacher::teachmaps`
 p prof.talk # Call to `talk` method defined in mixin module `Talkable`, which is mixed in
 # `GeographyTeacher` superclass `Teacher`
-
 p prof.class.ancestors #=> GeographyTeacher, Teacher, Talkable, Object, Kernel, BasicObject
+prof.name = 'Ralf' # Use the attr_accessor setter method to change `prof`s `name` instance variable.
+p prof.name #=> Ralf
+# p prof.subject # Raises a nomethoderror, calling a private method.
+p prof.what_do_i_teach? #=> My name is Ralf and I'm a Geography teacher.
+p prof == teach #=> true, uses the protected `age` getter method to compare ages.
+# p prof.age # Error, calls a protected method.
+p Teacher.number_of_teachers #=> 2 # Calling a class method to return a class variable tracking the number of instances of a teacher object.
+p Teacher.ancestors
+p GeographyTeacher.ancestors
+p prof.printtheconsts #=> Both constants print.
+p prof.gender #=> nil, the gender instance variable is uninitialzied but does not raise an error.
+p prof.gender = "male" # => male, setter methods always return the value passed in.
+p prof.gender #=> male
+p prof #=> <GeographyTeacher:encoding of object id @name='Ralf', @age=22, @subject='Geography', @gender='male'> # The `p` method calls `inspect` on the object.
+puts prof #=> <GeographyTeacher:encoding of object id> # The puts method calls `to_s` which returns class of the object and encoding of the object id, or as whatever a custom `to_s` method is defined to as this method is often overridden.
+
+prof.addbook(geo101)
+
+p prof
+p teach
